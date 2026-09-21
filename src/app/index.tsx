@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   Image, StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from "react-native";
+import { router } from "expo-router";
 
 export default function Index() {
   return (
@@ -54,8 +55,13 @@ export default function Index() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.botao}>
-            <Text style={styles.textoBotao}>ENTRAR</Text>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => router.replace("/(tabs)")}
+          >
+            <Text style={styles.textoBotao}>
+              ENTRAR
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
