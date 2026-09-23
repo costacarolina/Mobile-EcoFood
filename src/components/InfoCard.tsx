@@ -1,91 +1,96 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
+import { useTheme } from "@/../context/themeContext";
 
-
-type Props = {
+interface InfoCardProps {
   icon: keyof typeof Ionicons.glyphMap;
   valor: string;
   texto: string;
   cor: string;
-};
-
+}
 
 export default function InfoCard({
   icon,
   valor,
   texto,
-  cor
-}:Props){
+  cor,
+}: InfoCardProps) {
 
-return(
+  const { darkMode } = useTheme();
 
-<View style={styles.card}>
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: darkMode
+            ? "#2B2B2B"
+            : "#F5F5F5",
+        },
+      ]}
+    >
 
+      <Ionicons
+        name={icon}
+        size={22}
+        color={cor}
+      />
 
-<View style={[
-styles.iconBox,
-{backgroundColor:cor}
-]}>
+      <Text
+        style={[
+          styles.valor,
+          {
+            color: darkMode
+              ? "#FFFFFF"
+              : "#173B2C",
+          },
+        ]}
+      >
+        {valor}
+      </Text>
 
-<Ionicons
-name={icon}
-size={20}
-color="#fff"
-/>
+      <Text
+        style={[
+          styles.texto,
+          {
+            color: darkMode
+              ? "#FFFFFF"
+              : "#555555",
+          },
+        ]}
+      >
+        {texto}
+      </Text>
 
-</View>
-
-
-<Text style={styles.valor}>
-{valor}
-</Text>
-
-
-<Text style={styles.texto}>
-{texto}
-</Text>
-
-
-</View>
-
-)
-
+    </View>
+  );
 }
 
+const styles = StyleSheet.create({
 
+  card: {
+    width: 125,
+    height: 105,
 
-const styles=StyleSheet.create({
+    borderRadius: 10,
 
-card:{
-width:110,
-height:72,
-backgroundColor:"#F1F1F1",
-borderRadius:10,
-padding:8,
-margin:4
-},
+    padding: 12,
 
+    justifyContent: "center",
+    alignItems: "flex-start",
 
-iconBox:{
-width:30,
-height:30,
-borderRadius:7,
-alignItems:"center",
-justifyContent:"center",
-marginBottom:2
-},
+    marginRight: 8,
+  },
 
+  valor: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 6,
+  },
 
-valor:{
-fontSize:14,
-fontWeight:"bold",
-color:"#145B36"
-},
+  texto: {
+    fontSize: 9,
+    marginTop: 3,
+  },
 
-
-texto:{
-fontSize:9,
-color:"#333"
-}
-
-})
+});

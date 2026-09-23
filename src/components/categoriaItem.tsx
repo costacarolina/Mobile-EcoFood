@@ -1,83 +1,79 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { useTheme } from "@/../context/themeContext";
 
-
-type Props = {
-  nome:string;
-  porcentagem:string;
+interface CategoriaItemProps {
+  nome: string;
+  porcentagem: string;
+  icon: keyof typeof Ionicons.glyphMap;
 }
-
 
 export default function CategoriaItem({
   nome,
-  porcentagem
-}:Props){
+  porcentagem,
+  icon,
+}: CategoriaItemProps) {
 
+  const { darkMode } = useTheme();
 
-let icon:"snow-outline" | "cube-outline" | "file-tray-outline";
+  return (
+    <View style={styles.container}>
 
+      <View style={styles.esquerda}>
 
-if(nome === "Geladeira"){
-  icon="snow-outline";
+        <Ionicons
+          name={icon}
+          size={16}
+          color={darkMode ? "#4FA36B" : "#4FA36B"}
+        />
+
+        <Text
+          style={[
+            styles.nome,
+            {
+              color: darkMode ? "#FFFFFF" : "#171717",
+            },
+          ]}
+        >
+          {nome}
+        </Text>
+
+      </View>
+
+      <Text
+        style={[
+          styles.porcentagem,
+          {
+            color: darkMode ? "#FFFFFF" : "#171717",
+          },
+        ]}
+      >
+        {porcentagem}
+      </Text>
+
+    </View>
+  );
 }
-else if(nome === "Freezer"){
-  icon="cube-outline";
-}
-else{
-  icon="file-tray-outline";
-}
-
-
-
-return(
-
-<View style={styles.container}>
-
-
-<Ionicons
-name={icon}
-size={18}
-color="#287552"
-/>
-
-
-<Text style={styles.nome}>
-{nome}
-</Text>
-
-
-<Text style={styles.porcentagem}>
-{porcentagem}
-</Text>
-
-
-</View>
-
-)
-
-}
-
-
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 6,
+  },
 
-container:{
-flexDirection:"row",
-alignItems:"center",
-marginVertical:7
-},
+  esquerda: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 9,
+  },
 
+  nome: {
+    fontSize: 11,
+  },
 
-nome:{
-fontSize:14,
-marginLeft:10,
-flex:1
-},
-
-
-porcentagem:{
-fontSize:14
-}
-
-
-})
+  porcentagem: {
+    fontSize: 11,
+  },
+});
