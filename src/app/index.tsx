@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     marginBottom: 50,
-  },
+  },      
 
   form: {
     width: "100%",
