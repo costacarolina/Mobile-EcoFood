@@ -67,30 +67,25 @@ export default function InfoCard({
 }
 
 const styles = StyleSheet.create({
+    card: {
+        width: 150,
+        height: 120,
+        borderRadius: 12,
+        padding: 14,
+        justifyContent: "center",
+        alignItems: "flex-start",
+        marginRight: 10,
+    },
 
-  card: {
-    width: 125,
-    height: 105,
+    valor: {
+        fontSize: 21,
+        fontWeight: "bold",
+        marginTop: 7,
+    },
 
-    borderRadius: 10,
-
-    padding: 12,
-
-    justifyContent: "center",
-    alignItems: "flex-start",
-
-    marginRight: 8,
-  },
-
-  valor: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 6,
-  },
-
-  texto: {
-    fontSize: 9,
-    marginTop: 3,
-  },
-
+    texto: {
+        fontSize: 11,
+        lineHeight: 15,
+        marginTop: 4,
+    },
 });

@@ -13,18 +13,23 @@ export default function Home() {
         tabBarInactiveTintColor: "#173B2C",
 
         tabBarStyle: {
-          height: 68,
+          height: 82,
           backgroundColor: "#FFFDF8",
           borderTopWidth: 1,
           borderTopColor: "#DDDDDD",
-          paddingBottom: 5,
-          paddingTop: 4,
+          paddingBottom: 8,
+          paddingTop: 7,
         },
 
         tabBarLabelStyle: {
-          fontSize: 9,
+          fontSize: 11,
           fontWeight: "600",
+          marginTop: 2,
         },
+
+        tabBarIconStyle: {
+          marginBottom: 1,
+        }
       }}
     >
       <Tabs.Screen
@@ -35,7 +40,7 @@ export default function Home() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="home-outline"
-              size={size}
+              size={26}
               color={color}
             />
           ),
@@ -50,7 +55,7 @@ export default function Home() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="cube-outline"
-              size={size}
+              size={26}
               color={color}
             />
           ),
@@ -66,7 +71,7 @@ export default function Home() {
             <View style={styles.addButton}>
               <Ionicons
                 name="add"
-                size={34}
+                size={38}
                 color="#FFFFFF"
               />
             </View>
@@ -82,7 +87,7 @@ export default function Home() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="cart-outline"
-              size={size}
+              size={26}
               color={color}
             />
           ),
@@ -97,7 +102,7 @@ export default function Home() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="person-outline"
-              size={size}
+              size={26}
               color={color}
             />
           ),
@@ -109,15 +114,16 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   addButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 65,
+    height: 65,
+    borderRadius: 40,
 
     backgroundColor: "#C59B45",
 
     justifyContent: "center",
     alignItems: "center",
 
-    marginTop: -18,
+    marginTop: -50,
+    marginBottom: 5,
   },
 });

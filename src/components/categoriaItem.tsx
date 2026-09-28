@@ -70,10 +70,12 @@ const styles = StyleSheet.create({
   },
 
   nome: {
-    fontSize: 11,
+    fontSize: 14,
+    fontWeight: "600",
   },
 
   porcentagem: {
-    fontSize: 11,
+    fontSize: 12,
+    fontWeight: "600",
   },
 });

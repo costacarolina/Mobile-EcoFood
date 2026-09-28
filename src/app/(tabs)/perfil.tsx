@@ -8,20 +8,34 @@ import {
     StyleSheet,
     TouchableOpacity,
     Switch,
-    Image
+    Image,
+    TextInput,
 } from "react-native";
 
-import { router } from "expo-router";
+import { useState } from "react";
 
 export default function Perfil() {
     const { darkMode, toggleDarkMode } = useTheme();
+
+    const [editando, setEditando] = useState(false);
+
+    const [dados, setDados] = useState({
+        nome: "Sabor & Mesa",
+        cozinha: "Contemporânea",
+        endereco: "Rua das Auras, 067\nCentro, São Paulo - SP",
+        telefone: "(11) 99999-9999",
+        email: "contato@saboremesa.com.br",
+        cnpj: "12.345.678/0001-90",
+    });
+
+    const [dadosEditados, setDadosEditados] = useState(dados);
 
     const colors = {
         background: darkMode ? "#181818" : "#FFFFFF",
         card: darkMode ? "#2B2B2B" : "#FAFAFA",
         text: darkMode ? "#FFFFFF" : "#171717",
         secondary: darkMode ? "#CCCCCC" : "#333333",
-        border: darkMode ? "#2B2B2B" : "#DDDDDD",
+        border: darkMode ? "#444444" : "#DDDDDD",
         green: darkMode ? "#A5D6A7" : "#155B3A",
     };
 
@@ -34,12 +48,10 @@ export default function Perfil() {
                 },
             ]}
         >
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scroll}
             >
-
                 {/* TÍTULO */}
 
                 <Text
@@ -51,7 +63,6 @@ export default function Perfil() {
                     Meu perfil
                 </Text>
 
-
                 {/* RESTAURANTE */}
 
                 <View
@@ -62,15 +73,14 @@ export default function Perfil() {
                         },
                     ]}
                 >
+                    {/* LOGO DO RESTAURANTE */}
 
                     <Image
                         source={require("../../../assets/images/logorestaurante/logorestaurante.png")}
                         style={styles.logoRestaurante}
                     />
 
-
                     <View style={styles.infoRestaurante}>
-
                         <Text
                             style={[
                                 styles.label,
@@ -81,22 +91,20 @@ export default function Perfil() {
                         </Text>
 
                         <View style={styles.nomeLinha}>
-
                             <Text
                                 style={[
                                     styles.nome,
                                     { color: colors.text },
                                 ]}
                             >
-                                Sabor & Mesa
+                                {dados.nome}
                             </Text>
 
                             <Ionicons
                                 name="checkmark-circle"
-                                size={13}
+                                size={18}
                                 color="#4C914A"
                             />
-
                         </View>
 
                         <Text
@@ -105,13 +113,12 @@ export default function Perfil() {
                                 { color: colors.secondary },
                             ]}
                         >
-                            Cozinha contemporânea
+                            Cozinha {dados.cozinha.toLowerCase()}
                             {"\n"}
                             com propósito
                         </Text>
 
                         <View style={styles.statusLinha}>
-
                             <View style={styles.status}>
                                 <Text style={styles.statusTexto}>
                                     Ativo
@@ -126,26 +133,20 @@ export default function Perfil() {
                             >
                                 Desde 08/2023
                             </Text>
-
                         </View>
-
                     </View>
-
 
                     <Ionicons
                         name="lock-closed-outline"
-                        size={12}
+                        size={17}
                         color={colors.secondary}
                         style={styles.cadeado}
                     />
-
                 </View>
-
 
                 {/* DADOS DO RESTAURANTE */}
 
                 <View style={styles.tituloSecao}>
-
                     <Text
                         style={[
                             styles.tituloVerde,
@@ -155,18 +156,19 @@ export default function Perfil() {
                         Dados do restaurante
                     </Text>
 
-                    <TouchableOpacity>
-
+                    <TouchableOpacity
+                        onPress={() => {
+                            setDadosEditados(dados);
+                            setEditando(true);
+                        }}
+                    >
                         <Ionicons
                             name="pencil-outline"
-                            size={19}
+                            size={23}
                             color={colors.text}
                         />
-
                     </TouchableOpacity>
-
                 </View>
-
 
                 {/* DADOS */}
 
@@ -178,51 +180,157 @@ export default function Perfil() {
                         },
                     ]}
                 >
+                    {editando ? (
+                        <>
+                            <CampoEdicao
+                                titulo="Nome do restaurante"
+                                valor={dadosEditados.nome}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        nome: valor,
+                                    })
+                                }
+                                colors={colors}
+                            />
 
-                    <InfoLinha
-                        icon="document-text-outline"
-                        titulo="Nome do restaurante"
-                        valor="Sabor & Mesa"
-                        colors={colors}
-                    />
+                            <CampoEdicao
+                                titulo="Tipo de cozinha"
+                                valor={dadosEditados.cozinha}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        cozinha: valor,
+                                    })
+                                }
+                                colors={colors}
+                            />
 
-                    <InfoLinha
-                        icon="restaurant-outline"
-                        titulo="Tipo de cozinha"
-                        valor="Contemporânea"
-                        colors={colors}
-                    />
+                            <CampoEdicao
+                                titulo="Endereço"
+                                valor={dadosEditados.endereco}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        endereco: valor,
+                                    })
+                                }
+                                colors={colors}
+                                multiline
+                            />
 
-                    <InfoLinha
-                        icon="location-outline"
-                        titulo="Endereço"
-                        valor={"Rua das Auras, 067\nCentro, São Paulo - SP"}
-                        colors={colors}
-                    />
+                            <CampoEdicao
+                                titulo="Telefone"
+                                valor={dadosEditados.telefone}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        telefone: valor,
+                                    })
+                                }
+                                colors={colors}
+                                keyboardType="phone-pad"
+                            />
 
-                    <InfoLinha
-                        icon="call-outline"
-                        titulo="Telefone"
-                        valor="(11) 99999-9999"
-                        colors={colors}
-                    />
+                            <CampoEdicao
+                                titulo="E-mail"
+                                valor={dadosEditados.email}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        email: valor,
+                                    })
+                                }
+                                colors={colors}
+                                keyboardType="email-address"
+                            />
 
-                    <InfoLinha
-                        icon="mail-outline"
-                        titulo="E-mail"
-                        valor="contato@saboremesa.com.br"
-                        colors={colors}
-                    />
+                            <CampoEdicao
+                                titulo="CNPJ"
+                                valor={dadosEditados.cnpj}
+                                onChangeText={(valor: string) =>
+                                    setDadosEditados({
+                                        ...dadosEditados,
+                                        cnpj: valor,
+                                    })
+                                }
+                                colors={colors}
+                            />
 
-                    <InfoLinha
-                        icon="keypad-outline"
-                        titulo="CNPJ"
-                        valor="12.345.678/0001-90"
-                        colors={colors}
-                    />
+                            {/* BOTÕES */}
 
+                            <View style={styles.botoesEdicao}>
+                                <TouchableOpacity
+                                    style={styles.botaoCancelar}
+                                    onPress={() => {
+                                        setDadosEditados(dados);
+                                        setEditando(false);
+                                    }}
+                                >
+                                    <Text style={styles.textoCancelar}>
+                                        Cancelar
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={styles.botaoSalvar}
+                                    onPress={() => {
+                                        setDados(dadosEditados);
+                                        setEditando(false);
+                                    }}
+                                >
+                                    <Text style={styles.textoSalvar}>
+                                        Salvar alterações
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    ) : (
+                        <>
+                            <InfoLinha
+                                icon="document-text-outline"
+                                titulo="Nome do restaurante"
+                                valor={dados.nome}
+                                colors={colors}
+                            />
+
+                            <InfoLinha
+                                icon="restaurant-outline"
+                                titulo="Tipo de cozinha"
+                                valor={dados.cozinha}
+                                colors={colors}
+                            />
+
+                            <InfoLinha
+                                icon="location-outline"
+                                titulo="Endereço"
+                                valor={dados.endereco}
+                                colors={colors}
+                            />
+
+                            <InfoLinha
+                                icon="call-outline"
+                                titulo="Telefone"
+                                valor={dados.telefone}
+                                colors={colors}
+                            />
+
+                            <InfoLinha
+                                icon="mail-outline"
+                                titulo="E-mail"
+                                valor={dados.email}
+                                colors={colors}
+                            />
+
+                            <InfoLinha
+                                icon="keypad-outline"
+                                titulo="CNPJ"
+                                valor={dados.cnpj}
+                                colors={colors}
+                            />
+                        </>
+                    )}
                 </View>
-
 
                 {/* MODO ESCURO */}
 
@@ -230,51 +338,86 @@ export default function Perfil() {
                     style={[
                         styles.modoEscuro,
                         {
-                            backgroundColor: colors.card,
+                            backgroundColor: darkMode ? "#2B2B2B" : "#FAFAFA",
                         },
                     ]}
                 >
-
                     <Text
                         style={[
                             styles.modoTexto,
-                            { color: colors.text },
+                            {
+                                color: darkMode ? "#FFFFFF" : "#242424",
+                            },
                         ]}
                     >
                         Modo Escuro
                     </Text>
 
-                    <Switch
-                        value={darkMode}
-                        onValueChange={toggleDarkMode}
-                        trackColor={{
-                            false: "#C9C9C9",
-                            true: "#4C7553",
-                        }}
-                        thumbColor="#FFFFFF"
-                    />
-
+                    <View style={styles.switchContainer}>
+                        <Switch
+                            value={darkMode}
+                            onValueChange={toggleDarkMode}
+                            trackColor={{
+                                false: "#C9C9C9",
+                                true: "#4C7553",
+                            }}
+                            thumbColor="#FFFFFF"
+                        />
+                    </View>
                 </View>
 
-
                 {/* SAIR */}
-                <TouchableOpacity
-                    style={styles.botaoSair}
-                    onPress={() => {
-                        router.dismissAll();
-                        router.replace("/");
-                    }}
-                >
+
+                <TouchableOpacity style={styles.botaoSair}>
                     <Text style={styles.textoSair}>
                         Sair da conta
                     </Text>
                 </TouchableOpacity>
-
             </ScrollView>
         </View>
     );
 }
 
+/* COMPONENTE DOS CAMPOS DE EDIÇÃO */
+
+function CampoEdicao({
+    titulo,
+    valor,
+    onChangeText,
+    colors,
+    multiline = false,
+    keyboardType = "default",
+}: any) {
+    return (
+        <View style={styles.campoEdicao}>
+            <Text
+                style={[
+                    styles.labelEdicao,
+                    { color: colors.text },
+                ]}
+            >
+                {titulo}
+            </Text>
+
+            <TextInput
+                value={valor}
+                onChangeText={onChangeText}
+                multiline={multiline}
+                keyboardType={keyboardType}
+                placeholderTextColor={colors.secondary}
+                style={[
+                    styles.inputEdicao,
+                    {
+                        color: colors.text,
+                        borderColor: colors.border,
+                        backgroundColor: colors.background,
+                    },
+                    multiline && styles.inputMultiline,
+                ]}
+            />
+        </View>
+    );
+}
 
 /* COMPONENTE DAS INFORMAÇÕES */
 
@@ -284,15 +427,12 @@ function InfoLinha({
     valor,
     colors,
 }: any) {
-
     return (
         <View style={styles.linhaInfo}>
-
             <View style={styles.ladoEsquerdo}>
-
                 <Ionicons
                     name={icon}
-                    size={16}
+                    size={21}
                     color={colors.secondary}
                 />
 
@@ -304,7 +444,6 @@ function InfoLinha({
                 >
                     {titulo}
                 </Text>
-
             </View>
 
             <Text
@@ -315,146 +454,225 @@ function InfoLinha({
             >
                 {valor}
             </Text>
-
         </View>
     );
 }
 
-
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
     },
 
     scroll: {
         paddingHorizontal: 18,
-        paddingTop: 48,
-        paddingBottom: 100,
+        paddingTop: 75,
+        paddingBottom: 110,
     },
+
+    /* TÍTULO */
 
     titulo: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 38,
+        marginBottom: 30,
     },
 
+    /* CARD RESTAURANTE */
+
     restaurante: {
-        minHeight: 102,
-        borderRadius: 9,
-        padding: 9,
+        minHeight: 125,
+        borderRadius: 12,
+        padding: 14,
         flexDirection: "row",
         alignItems: "center",
     },
 
     logoRestaurante: {
-        width: 80,
-        height: 80,
-        borderRadius: 45,
+        width: 92,
+        height: 92,
+        borderRadius: 46,
         resizeMode: "cover",
+        flexShrink: 0,
     },
 
     infoRestaurante: {
         flex: 1,
-        marginLeft: 14,
+        marginLeft: 15,
     },
 
     label: {
-        fontSize: 9,
+        fontSize: 12,
+        marginBottom: 3,
     },
 
     nomeLinha: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: 6,
     },
 
     nome: {
-        fontSize: 13,
+        fontSize: 18,
         fontWeight: "bold",
     },
 
     descricao: {
-        fontSize: 8,
-        lineHeight: 10,
-        marginTop: 2,
+        fontSize: 12,
+        lineHeight: 16,
+        marginTop: 5,
     },
 
     statusLinha: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 7,
-        marginTop: 5,
+        gap: 9,
+        marginTop: 8,
     },
 
     status: {
         backgroundColor: "#4C914A",
-        paddingHorizontal: 7,
-        paddingVertical: 2,
-        borderRadius: 2,
+        paddingHorizontal: 9,
+        paddingVertical: 4,
+        borderRadius: 4,
     },
 
     statusTexto: {
         color: "#FFFFFF",
-        fontSize: 7,
+        fontSize: 10,
+        fontWeight: "600",
     },
 
     data: {
-        fontSize: 7,
+        fontSize: 10,
     },
 
     cadeado: {
-        alignSelf: "flex-end",
+        alignSelf: "flex-start",
+        marginLeft: 5,
     },
+
+    /* TÍTULO DA SEÇÃO */
 
     tituloSecao: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginTop: 22,
-        marginBottom: 17,
+        marginTop: 28,
+        marginBottom: 15,
     },
 
     tituloVerde: {
-        fontSize: 10,
+        fontSize: 17,
         fontWeight: "bold",
     },
 
+    /* CARD DE DADOS */
+
     cardDados: {
-        borderRadius: 9,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        paddingVertical: 12,
     },
 
     linhaInfo: {
-        minHeight: 34,
+        minHeight: 62,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        paddingVertical: 9,
     },
 
     ladoEsquerdo: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: 10,
         flex: 1,
+        paddingRight: 10,
     },
 
     nomeInfo: {
-        fontSize: 9,
+        fontSize: 14,
+        fontWeight: "600",
+        flexShrink: 1,
     },
 
     valorInfo: {
-        fontSize: 8,
+        fontSize: 14,
         textAlign: "right",
-        maxWidth: "52%",
+        maxWidth: "55%",
+        lineHeight: 19,
     },
 
-    modoEscuro: {
-        height: 42,
+    /* EDIÇÃO */
+
+    campoEdicao: {
+        marginBottom: 15,
+    },
+
+    labelEdicao: {
+        fontSize: 14,
+        fontWeight: "600",
+        marginBottom: 7,
+    },
+
+    inputEdicao: {
+        minHeight: 48,
+        borderWidth: 1,
         borderRadius: 9,
-        marginTop: 18,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        fontSize: 14,
+    },
+
+    inputMultiline: {
+        minHeight: 75,
+        textAlignVertical: "top",
+    },
+
+    botoesEdicao: {
+        flexDirection: "row",
+        gap: 10,
+        marginTop: 5,
+    },
+
+    botaoCancelar: {
+        flex: 1,
+        height: 48,
+        borderRadius: 9,
+        borderWidth: 1,
+        borderColor: "#C94C4C",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    textoCancelar: {
+        color: "#C94C4C",
+        fontSize: 13,
+        fontWeight: "600",
+    },
+
+    botaoSalvar: {
+        flex: 1,
+        height: 48,
+        borderRadius: 9,
+        backgroundColor: "#2F6B4F",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    textoSalvar: {
+        color: "#FFFFFF",
+        fontSize: 13,
+        fontWeight: "600",
+    },
+
+    /* MODO ESCURO */
+
+    modoEscuro: {
+        minHeight: 58,
+        borderRadius: 10,
+        marginTop: 20,
         paddingHorizontal: 16,
         flexDirection: "row",
         alignItems: "center",
@@ -462,13 +680,21 @@ const styles = StyleSheet.create({
     },
 
     modoTexto: {
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: "bold",
     },
+    
+    switchContainer: {
+        height: 72,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    /* SAIR */
 
     botaoSair: {
-        height: 42,
-        borderRadius: 9,
+        height: 50,
+        borderRadius: 10,
         borderWidth: 2,
         borderColor: "#E85B5B",
         marginTop: 18,
@@ -478,8 +704,7 @@ const styles = StyleSheet.create({
 
     textoSair: {
         color: "#E85B5B",
-        fontSize: 12,
-        fontWeight: "500",
+        fontSize: 14,
+        fontWeight: "600",
     },
-
 });

@@ -14,6 +14,7 @@ import {
     StyleSheet,
     Image,
 } from "react-native";
+import { router } from "expo-router";
 
 export default function Home() {
     const { darkMode } = useTheme();
@@ -59,12 +60,6 @@ export default function Home() {
 
                 <View style={styles.header}>
 
-                    <Ionicons
-                        name="menu"
-                        size={27}
-                        color={colors.text}
-                    />
-
                     <Image
                         source={require("../../../assets/images/logoecofood/logoecofood.png")}
                         style={styles.logo}
@@ -74,15 +69,19 @@ export default function Home() {
 
                         <Ionicons
                             name="notifications-outline"
-                            size={25}
+                            size={28}
                             color={colors.text}
                         />
 
-                        <Ionicons
-                            name="scan-outline"
-                            size={25}
-                            color={colors.text}
-                        />
+                        <TouchableOpacity
+                            onPress={() => router.push("/adicionarProduto")}
+                        >
+                            <Ionicons
+                                name="scan-outline"
+                                size={28}
+                                color={colors.text}
+                            />
+                        </TouchableOpacity>
 
                     </View>
 
@@ -230,6 +229,74 @@ export default function Home() {
 
                 </View>
 
+                <View
+                    style={[
+                        styles.impacto,
+                        { backgroundColor: colors.card },
+                    ]}
+                >
+
+                    <Text
+                        style={[
+                            styles.impactoTitulo,
+                            { color: colors.text },
+                        ]}
+                    >
+                        Impacto do seu restaurante
+                    </Text>
+
+                    <View style={styles.row}>
+
+                        <ImpactoItem
+                            icon="leaf-outline"
+                            valor="12,4 kg"
+                            texto="Aproveitados"
+                        />
+
+                        <ImpactoItem
+                            icon="cash-outline"
+                            valor="R$ 680"
+                            texto="Economia"
+                        />
+
+                        <ImpactoItem
+                            icon="trending-up-outline"
+                            valor="14%"
+                            texto="Redução"
+                        />
+
+                    </View>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.relatorio,
+                            {
+                                backgroundColor: darkMode
+                                    ? "#666666"
+                                    : "#BBBBBB",
+                            },
+                        ]}
+                    >
+
+                        <Text
+                            style={[
+                                styles.relatorioTexto,
+                                { color: colors.text },
+                            ]}
+                        >
+                            Ver relatórios completos
+                        </Text>
+
+                        <Ionicons
+                            name="chevron-forward"
+                            size={15}
+                            color={colors.text}
+                        />
+
+                    </TouchableOpacity>
+
+                </View>
+
 
                 {/* ESTOQUE */}
 
@@ -371,77 +438,6 @@ export default function Home() {
 
                 </View>
 
-
-                {/* IMPACTO */}
-
-                <View
-                    style={[
-                        styles.impacto,
-                        { backgroundColor: colors.card },
-                    ]}
-                >
-
-                    <Text
-                        style={[
-                            styles.impactoTitulo,
-                            { color: colors.text },
-                        ]}
-                    >
-                        Impacto do seu restaurante
-                    </Text>
-
-                    <View style={styles.row}>
-
-                        <ImpactoItem
-                            icon="leaf-outline"
-                            valor="12,4 kg"
-                            texto="Alimentos aproveitados"
-                        />
-
-                        <ImpactoItem
-                            icon="cash-outline"
-                            valor="R$ 680"
-                            texto="Economia gerada"
-                        />
-
-                        <ImpactoItem
-                            icon="trending-up-outline"
-                            valor="14%"
-                            texto="Redução no desperdício"
-                        />
-
-                    </View>
-
-                    <TouchableOpacity
-                        style={[
-                            styles.relatorio,
-                            {
-                                backgroundColor: darkMode
-                                    ? "#666666"
-                                    : "#BBBBBB",
-                            },
-                        ]}
-                    >
-
-                        <Text
-                            style={[
-                                styles.relatorioTexto,
-                                { color: colors.text },
-                            ]}
-                        >
-                            Ver relatórios completos
-                        </Text>
-
-                        <Ionicons
-                            name="chevron-forward"
-                            size={15}
-                            color={colors.text}
-                        />
-
-                    </TouchableOpacity>
-
-                </View>
-
             </ScrollView>
 
         </View>
@@ -497,38 +493,44 @@ const styles = StyleSheet.create({
     },
 
     scroll: {
-        paddingHorizontal: 10,
-        paddingTop: 18,
-        paddingBottom: 90,
+        paddingHorizontal: 26,
+        paddingTop: 40,
+        paddingBottom: 120,
     },
 
     header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        height: 70,
+        position: "relative",
+        justifyContent: "center",
         alignItems: "center",
-        height: 58,
     },
 
     logo: {
-        width: 70,
-        height: 55,
+        width: 100,
+        height: 62,
         resizeMode: "contain",
     },
 
     icons: {
+        position: "absolute",
+        right: 0,
+        top: 0,
+        height: 70,
         flexDirection: "row",
-        gap: 15,
+        alignItems: "center",
+        gap: 18,
     },
 
     bem: {
-        fontSize: 14,
-        marginTop: 8,
+        fontSize: 17,
+        fontWeight: "500",
+        marginTop: 12,
     },
 
     titulo: {
-        fontSize: 17,
+        fontSize: 21,
         fontWeight: "bold",
-        marginTop: 2,
+        marginTop: 4,
     },
 
     data: {
@@ -547,13 +549,13 @@ const styles = StyleSheet.create({
 
     alerta: {
         borderWidth: 1,
-        borderRadius: 10,
-        padding: 10,
+        borderRadius: 12,
+        padding: 14,
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
-        marginTop: 15,
-        minHeight: 64,
+        gap: 12,
+        marginTop: 18,
+        minHeight: 86,
 
         // SOMBRA
         shadowColor: "#000",
@@ -571,27 +573,28 @@ const styles = StyleSheet.create({
     },
 
     alertTitulo: {
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: "bold",
     },
 
     alertTexto: {
-        fontSize: 10,
-        marginTop: 1,
+        fontSize: 13,
+        marginTop: 4,
+        lineHeight: 18,
     },
 
     alertButton: {
-        borderRadius: 8,
-        paddingVertical: 9,
-        paddingHorizontal: 9,
+        borderRadius: 9,
+        paddingVertical: 11,
+        paddingHorizontal: 12,
         flexDirection: "row",
         alignItems: "center",
-        gap: 2,
+        gap: 4,
     },
 
     alertButtonText: {
         color: "#FFFFFF",
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: "bold",
     },
 
@@ -615,10 +618,10 @@ const styles = StyleSheet.create({
     },
 
     cardTitulo: {
-        fontSize: 11,
+        fontSize: 19,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 12,
+        marginBottom: 16,
     },
 
     verde: {
@@ -642,7 +645,8 @@ const styles = StyleSheet.create({
     },
 
     verTexto: {
-        fontSize: 9,
+        fontSize: 13,
+        fontWeight: "600",
     },
 
     itemLista: {
@@ -659,7 +663,9 @@ const styles = StyleSheet.create({
     },
 
     itemTexto: {
-        fontSize: 10,
+        fontSize: 14,
+        fontWeight: "600",
+        lineHeight: 17,
     },
 
 
@@ -682,8 +688,9 @@ const styles = StyleSheet.create({
     },
 
     impactoTitulo: {
-        fontSize: 10,
-        marginBottom: 12,
+        fontSize: 16,
+        fontWeight: "bold",
+        marginBottom: 18,
     },
 
     row: {
@@ -692,17 +699,18 @@ const styles = StyleSheet.create({
     },
 
     relatorio: {
-        paddingVertical: 7,
-        borderRadius: 8,
-        marginTop: 10,
+        paddingVertical: 11,
+        borderRadius: 9,
+        marginTop: 15,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
-        gap: 3,
+        gap: 5,
     },
 
     relatorioTexto: {
-        fontSize: 9,
+        fontSize: 13,
+        fontWeight: "600"
     },
 
 });
