@@ -3,11 +3,12 @@ import { Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 export default function Home() {
-    return (
-         <Tabs
+  return (
+    <Tabs
       screenOptions={{
         headerShown: false,
 
+        // O menu fica SEMPRE claro
         tabBarActiveTintColor: "#173B2C",
         tabBarInactiveTintColor: "#173B2C",
 
@@ -25,8 +26,7 @@ export default function Home() {
           fontWeight: "600",
         },
       }}
-      >
-
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -42,7 +42,7 @@ export default function Home() {
         }}
       />
 
-       <Tabs.Screen
+      <Tabs.Screen
         name="estoque"
         options={{
           title: "Estoque",
@@ -57,7 +57,7 @@ export default function Home() {
         }}
       />
 
-       <Tabs.Screen
+      <Tabs.Screen
         name="adicionarProduto"
         options={{
           title: "Adicionar",
@@ -103,22 +103,21 @@ export default function Home() {
           ),
         }}
       />
-
-      </Tabs>
-    
-    )
+    </Tabs>
+  );
 }
 
-const styles = StyleSheet.create ({
-    addButton: {
-        width: 48,
-        height: 48,
-        borderRadius: 24,
-        backgroundColor: "#C59B45",
+const styles = StyleSheet.create({
+  addButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
 
-        justifyContent: "center",
-        alignItems: "center",
+    backgroundColor: "#C59B45",
 
-        marginTop: -18, 
-    }
+    justifyContent: "center",
+    alignItems: "center",
+
+    marginTop: -18,
+  },
 });
