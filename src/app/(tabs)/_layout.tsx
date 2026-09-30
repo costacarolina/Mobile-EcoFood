@@ -1,9 +1,19 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+} from "react-native";
 
 export default function Home() {
+  const { fontScale } = useWindowDimensions();
+
+  const alturaMenu = Math.max(82, 70 + fontScale * 12);
+
   return (
+
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -13,7 +23,7 @@ export default function Home() {
         tabBarInactiveTintColor: "#173B2C",
 
         tabBarStyle: {
-          height: 82,
+          height: alturaMenu,
           backgroundColor: "#FFFDF8",
           borderTopWidth: 1,
           borderTopColor: "#DDDDDD",
@@ -106,6 +116,14 @@ export default function Home() {
               color={color}
             />
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="detalhesProduto"
+        options={{
+          title: "Detalhes",
+          href: null,
         }}
       />
     </Tabs>

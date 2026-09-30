@@ -58,15 +58,16 @@ const styles = StyleSheet.create({
   },
 
   valor: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginTop: 4,
-  },
+  fontSize: 12,
+  fontWeight: "bold",
+  marginTop: 4,
+},
 
-  texto: {
-    fontSize: 13,
-    fontWeight: "600",
-    textAlign: "center",
-    marginTop: 2,
-  },
+texto: {
+  fontSize: 13,
+  fontWeight: "600",
+  textAlign: "center",
+  marginTop: 2,
+  flexShrink: 1,
+},
 });

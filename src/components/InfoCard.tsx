@@ -68,14 +68,14 @@ export default function InfoCard({
 
 const styles = StyleSheet.create({
     card: {
-        width: 150,
-        height: 120,
-        borderRadius: 12,
-        padding: 14,
-        justifyContent: "center",
-        alignItems: "flex-start",
-        marginRight: 10,
-    },
+    width: 150,
+    minHeight: 120,
+    borderRadius: 12,
+    padding: 14,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginRight: 10,
+},
 
     valor: {
         fontSize: 21,
@@ -84,8 +84,9 @@ const styles = StyleSheet.create({
     },
 
     texto: {
-        fontSize: 11,
-        lineHeight: 15,
-        marginTop: 4,
-    },
+    fontSize: 11,
+    marginTop: 4,
+    flexShrink: 1,
+    includeFontPadding: true,
+},
 });

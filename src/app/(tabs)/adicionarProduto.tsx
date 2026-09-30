@@ -69,11 +69,6 @@ export default function AdicionarProduto() {
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
       >
-        {/* LOGO */}
-        <Image
-          source={require("../../../assets/images/logoecofood/logoecofood.png")}
-          style={styles.logo}
-        />
 
         {/* CABEÇALHO */}
         <View style={styles.header}>
@@ -592,25 +587,18 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    paddingHorizontal: 24,
-    paddingBottom: 30,
-  },
-
-  logo: {
-    width: 90,
-    height: 60,
-    resizeMode: "contain",
-    alignSelf: "center",
-    marginTop: 18,
-    marginBottom: 4,
-  },
+  paddingHorizontal: 24,
+  paddingTop: 60,
+  paddingBottom: 30,
+},
 
   header: {
-    height: 58,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
+  minHeight: 58,
+  justifyContent: "center",
+  alignItems: "center",
+  position: "relative",
+  paddingVertical: 6,
+},
 
   botaoVoltar: {
     position: "absolute",
@@ -619,9 +607,11 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontSize: 21,
-    fontWeight: "700",
-  },
+  fontSize: 21,
+  fontWeight: "700",
+  textAlign: "center",
+  flexShrink: 1,
+},
 
   abas: {
     height: 44,

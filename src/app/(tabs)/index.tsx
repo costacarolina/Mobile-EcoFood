@@ -436,6 +436,20 @@ export default function Home() {
 
                     </TouchableOpacity>
 
+                    <TouchableOpacity
+                        onPress={() => router.push("/(tabs)/detalhesProduto")}
+                        style={{
+                            backgroundColor: "#2F6B4F",
+                            padding: 15,
+                            borderRadius: 10,
+                            margin: 20,
+                        }}
+                    >
+                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                            Visualizar detalhes do produto
+                        </Text>
+                    </TouchableOpacity>
+
                 </View>
 
             </ScrollView>
@@ -493,9 +507,9 @@ const styles = StyleSheet.create({
     },
 
     scroll: {
-        paddingHorizontal: 26,
-        paddingTop: 40,
-        paddingBottom: 120,
+        paddingHorizontal: 20,
+        paddingTop: 30,
+        paddingBottom: 40,
     },
 
     header: {
@@ -525,17 +539,22 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: "500",
         marginTop: 12,
+        flexShrink: 1,
+        flexWrap: "wrap",
     },
 
     titulo: {
         fontSize: 21,
         fontWeight: "bold",
         marginTop: 4,
+        flexShrink: 1,
+        flexWrap: "wrap",
     },
 
     data: {
         fontSize: 10,
-        marginTop: 2,
+        marginTop: 4,
+        flexShrink: 1,
     },
 
     cards: {
@@ -580,7 +599,7 @@ const styles = StyleSheet.create({
     alertTexto: {
         fontSize: 13,
         marginTop: 4,
-        lineHeight: 18,
+        flexShrink: 1,
     },
 
     alertButton: {
@@ -589,13 +608,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 4,
+        flexShrink: 1,
+        flexWrap: "wrap",
     },
 
     alertButtonText: {
         color: "#FFFFFF",
         fontSize: 11,
         fontWeight: "bold",
+        flexShrink: 1,
+        textAlign: "center",
     },
 
 
@@ -657,15 +681,18 @@ const styles = StyleSheet.create({
     },
 
     itemEsquerdo: {
+        flex: 1,
         flexDirection: "row",
         alignItems: "center",
         gap: 9,
     },
 
     itemTexto: {
+        flex: 1,
+        flexShrink: 1,
         fontSize: 14,
         fontWeight: "600",
-        lineHeight: 17,
+        includeFontPadding: true,
     },
 
 

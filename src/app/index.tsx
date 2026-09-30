@@ -92,7 +92,7 @@ export default function Index() {
 
           <TouchableOpacity
             style={styles.botao}
-            onPress={() => router.replace("/detalhesProduto")}
+            onPress={() => router.replace("/(tabs)")}
           >
             <Text style={styles.textoBotao}>
               ENTRAR
