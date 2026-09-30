@@ -110,10 +110,12 @@ export default function Index() {
           <Text style={styles.textoCadastro}>
             Ainda não possui uma conta?
           </Text>
-
+          
+          <TouchableOpacity onPress={() => router.push("/cadastro-etapa1")}>
           <Text style={styles.linkCadastro}>
-            Cadastre seu restaurante
+              Cadastre seu restaurante
           </Text>
+</TouchableOpacity>
 
         </TouchableOpacity>
 
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#333333",
     marginBottom: 50,
-  },
+  },      
 
   form: {
     width: "100%",
