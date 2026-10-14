@@ -4,119 +4,130 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function CadastroEtapa2() {
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../../assets/images/logoecofood/logoecofood.png")}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+    <LinearGradient
+      colors={[
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#F4F8F4",
+        "#DCEBDD",
+        "#A8C9AD",
+        "#3f7045",
+      ]}
+      locations={[0, 0.35, 0.52, 0.63, 0.76, 0.9, 1]}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "transparent" }}
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Image
+          source={require("../../assets/images/logoecofood/logoecofood.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
-      <Text style={styles.etapa}>2 de 2</Text>
-      <Text style={styles.subtitulo}>Dados de acesso</Text>
+        <Text style={styles.etapa}>2 de 2</Text>
+        <Text style={styles.subtitulo}>Dados de acesso</Text>
 
-      <View style={styles.barra}>
-        <View style={styles.progresso} />
-      </View>
-
-      <View style={styles.form}>
-        <Text style={styles.label}>Nome do responsável</Text>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={22} color="#234f32" />
-          <TextInput
-            placeholder="Ex.: Rafael Mendes"
-            placeholderTextColor="#9a9a9a"
-            style={styles.input}
-          />
+        <View style={styles.barra}>
+          <View style={styles.progresso} />
         </View>
 
-        <Text style={styles.label}>E-mail</Text>
+        <View style={styles.form}>
+          <Text style={styles.label}>Nome do responsável</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={22} color="#234f32" />
+            <TextInput
+              placeholder="Ex.: Rafael Mendes"
+              placeholderTextColor="#9a9a9a"
+              style={styles.input}
+            />
+          </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={22} color="#234f32" />
-          <TextInput
-            placeholder="Digite seu email"
-            placeholderTextColor="#9a9a9a"
-            keyboardType="email-address"
-            style={styles.input}
-          />
+          <Text style={styles.label}>E-mail</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail-outline" size={22} color="#234f32" />
+            <TextInput
+              placeholder="Digite seu email"
+              placeholderTextColor="#9a9a9a"
+              keyboardType="email-address"
+              style={styles.input}
+            />
+          </View>
+
+          <Text style={styles.label}>Senha</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={22} color="#234f32" />
+            <TextInput
+              placeholder="Digite sua senha"
+              placeholderTextColor="#9a9a9a"
+              secureTextEntry
+              style={styles.input}
+            />
+          </View>
+
+          <Text style={styles.label}>Confirme sua senha</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={22} color="#234f32" />
+            <TextInput
+              placeholder="Confirme sua senha"
+              placeholderTextColor="#9a9a9a"
+              secureTextEntry
+              style={styles.input}
+            />
+          </View>
         </View>
 
-        <Text style={styles.label}>Senha</Text>
+        <TouchableOpacity style={styles.botao}>
+          <Text style={styles.textoBotao}>ENTRAR</Text>
+        </TouchableOpacity>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={22} color="#234f32" />
-          <TextInput
-            placeholder="Digite sua senha"
-            placeholderTextColor="#9a9a9a"
-            secureTextEntry
-            style={styles.input}
-          />
-        </View>
-
-        <Text style={styles.label}>Confirme sua senha</Text>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={22} color="#234f32" />
-          <TextInput
-            placeholder="Confirme sua senha"
-            placeholderTextColor="#9a9a9a"
-            secureTextEntry
-            style={styles.input}
-          />
-        </View>
-      </View>
-
-      <TouchableOpacity style={styles.botao}>
-        <Text style={styles.textoBotao}>ENTRAR</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.cardLogin}>
-        <Text style={styles.textoConta}>
-          Já possui uma conta?
-        </Text>
-
-        <Text style={styles.linkEntrar}>
-          Entrar
-        </Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.cardLogin}>
+          <Text style={styles.textoConta}>Já possui uma conta?</Text>
+          <Text style={styles.linkEntrar}>Entrar</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#d9e7d8",
+    flexGrow: 1,
     alignItems: "center",
     paddingHorizontal: 25,
     paddingTop: 40,
+    paddingBottom: 30,
   },
-
   logo: {
-    width: 180,
-    height: 120,
+    width: 145,
+    height: 95,
   },
 
-  etapa: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#1f5a34",
-    marginTop: 10,
-  },
+ etapa: {
+  fontSize: 28,
+  fontWeight: "700",
+  color: "#1f5a34",
+  marginTop: 10,
+},
 
-  subtitulo: {
-    fontSize: 22,
-    color: "#808080",
-    fontWeight: "600",
-    marginBottom: 10,
-  },
+subtitulo: {
+  fontSize: 18,
+  color: "#808080",
+  fontWeight: "600",
+  marginBottom: 10,
+},
 
   barra: {
     width: "85%",

@@ -5,14 +5,34 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
   View,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-import {router} from "expo-router"; 
+import { router } from "expo-router";
 
 export default function CadastroRestaurante() {
   return (
-    <View style={styles.container}>
+  <LinearGradient
+    colors={[
+      "#FFFFFF",
+      "#FFFFFF",
+      "#FFFFFF",
+      "#F4F8F4",
+      "#DCEBDD",
+      "#A8C9AD",
+      "#3f7045",
+    ]}
+    locations={[0, 0.35, 0.52, 0.63, 0.76, 0.9, 1]}
+    style={{ flex: 1 }}
+  >
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "transparent" }}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
       <Image
         source={require("@/assets/images/logoecofood/logoecofood.png")}
         style={styles.logo}
@@ -108,37 +128,39 @@ export default function CadastroRestaurante() {
           color="#FFF"
         />
       </TouchableOpacity>
-    </View>
+    </ScrollView>
+  </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#d6e6d7",
+    flexGrow: 1,
+
     alignItems: "center",
     paddingTop: 40,
     paddingHorizontal: 25,
+    paddingBottom: 30,
   },
 
   logo: {
-    width: 180,
-    height: 120,
+    width: 145,
+    height: 95,
   },
 
   etapa: {
-    fontSize: 34,
-    fontWeight: "700",
-    color: "#1d5c35",
-    marginTop: 5,
-  },
+  fontSize: 28,
+  fontWeight: "700",
+  color: "#1d5c35",
+  marginTop: 5,
+},
 
-  subEtapa: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#8d8d8d",
-    marginBottom: 15,
-  },
+subEtapa: {
+  fontSize: 18,
+  fontWeight: "600",
+  color: "#8d8d8d",
+  marginBottom: 15,
+},
 
   barraFundo: {
     width: "85%",
