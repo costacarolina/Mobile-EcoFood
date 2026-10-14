@@ -118,7 +118,7 @@ export default function Scanner() {
 
   return (
     <View style={styles.container}>
-      {/* CÂMERA */}
+      
       <CameraView
         style={styles.camera}
         facing="back"
@@ -138,10 +138,10 @@ export default function Scanner() {
         }
       />
 
-      {/* INTERFACE POR CIMA DA CÂMERA */}
+      
       <View style={styles.overlay}>
 
-        {/* VOLTAR */}
+       
         <TouchableOpacity
           style={styles.botaoVoltar}
           onPress={voltar}
@@ -153,7 +153,7 @@ export default function Scanner() {
           />
         </TouchableOpacity>
 
-        {/* ÁREA DE SCANNER */}
+        
         <View style={styles.areaScanner}>
           <View
             style={[
@@ -196,13 +196,13 @@ export default function Scanner() {
           />
         </View>
 
-        {/* INSTRUÇÃO */}
+        
         <Text style={styles.instrucao}>
           Posicione o código de barras{"\n"}
           no centro da câmera.
         </Text>
 
-        {/* RESULTADO */}
+       
         {codigo !== "" && (
           <View
             style={[
@@ -236,10 +236,10 @@ export default function Scanner() {
           </View>
         )}
 
-        {/* OPÇÕES */}
+        
         <View style={styles.opcoes}>
 
-          {/* LANTERNA */}
+          
           <TouchableOpacity
             style={styles.opcao}
             onPress={() => setLanterna(!lanterna)}
@@ -269,7 +269,7 @@ export default function Scanner() {
             </Text>
           </TouchableOpacity>
 
-          {/* GALERIA */}
+          
           <TouchableOpacity
             style={styles.opcao}
             onPress={() => {

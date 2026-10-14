@@ -27,13 +27,13 @@ export default function Index() {
     >
       <View style={styles.topSection}>
 
-        {/* LOGO ECOFOOD */}
+        
         <Image
           source={require("../../assets/images/logoecofood/logoecofood.png")}
           style={styles.logo}
         />
 
-        {/* TÍTULO */}
+      
         <Text style={styles.titulo}>
           Bem vindo de volta!
         </Text>
@@ -42,7 +42,7 @@ export default function Index() {
           Entre na sua conta para continuar.
         </Text>
 
-        {/* FORMULÁRIO */}
+        
         <View style={styles.form}>
 
           <Text style={styles.label}>
@@ -102,7 +102,7 @@ export default function Index() {
         </View>
       </View>
 
-      {/* CADASTRO */}
+      
       <View style={styles.bottomSection}>
 
         <TouchableOpacity style={styles.cardCadastro}>
@@ -132,50 +132,52 @@ const styles = StyleSheet.create({
   topSection: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 48,
-    paddingHorizontal: 32,
+    paddingTop: 35,
+    paddingHorizontal: 28,
   },
 
   logo: {
-    width: 210,
-    height: 105,
+    width: 240,
+    height: 120,
     resizeMode: "contain",
-    marginBottom: 8,
+    marginBottom: 10,
   },
 
   titulo: {
-    fontSize: 22,
+    fontSize: 27,
     fontWeight: "700",
     color: "#1f5b2f",
-    marginBottom: 2,
+    marginBottom: 5,
+    textAlign: "center",
   },
 
   subtitulo: {
-    fontSize: 12,
+    fontSize: 15,
     color: "#333333",
-    marginBottom: 50,
-  },      
+    marginBottom: 35,
+    textAlign: "center",
+  },
 
   form: {
     width: "100%",
   },
 
   label: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: "600",
     color: "#1f5b2f",
-    marginBottom: 7,
-    marginTop: 9,
+    marginBottom: 8,
+    marginTop: 10,
   },
 
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    height: 45,
-    marginBottom: 8,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    height: 54,
+    marginBottom: 10,
 
     shadowColor: "#000",
     shadowOffset: {
@@ -189,64 +191,68 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    marginRight: 9,
+    marginRight: 11,
   },
 
   input: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 15,
   },
 
   esqueciSenha: {
     textAlign: "right",
     color: "#1f5b2f",
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: "600",
-    marginTop: 1,
-    marginBottom: 28,
+    marginTop: 3,
+    marginBottom: 22,
   },
 
   botao: {
     backgroundColor: "#2f7b42",
-    height: 48,
-    borderRadius: 10,
+    height: 55,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
   },
 
   textoBotao: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "700",
   },
 
   bottomSection: {
-    height: 190,
+    minHeight: 145,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingHorizontal: 40,
-    paddingTop: 35,
+    paddingHorizontal: 28,
+    paddingTop: 15,
+    paddingBottom: 20,
   },
 
   cardCadastro: {
     width: "100%",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    paddingVertical: 20,
+    borderRadius: 12,
+    paddingVertical: 22,
+    paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
   },
 
   textoCadastro: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
     color: "#111111",
+    textAlign: "center",
   },
 
   linkCadastro: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
     color: "#1f5b2f",
-    marginTop: 5,
+    marginTop: 7,
+    textAlign: "center",
   },
 });

@@ -126,7 +126,17 @@ export default function Home() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+  name="status"
+  options={{
+    title: "Status",
+    href: null,
+  }}
+/>
     </Tabs>
+
+    
   );
 }
 
