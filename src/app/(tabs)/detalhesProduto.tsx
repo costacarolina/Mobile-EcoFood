@@ -201,8 +201,8 @@ export default function DetalhesProduto() {
 
                     <TouchableOpacity
                         style={estilos.botaoStatus}
-                        onPress={alterarStatus}
-                    >
+                        onPress={() => router.push("/status")}>
+                    
                         <Text style={estilos.textoBotaoStatus}>
                             Status
                         </Text>
