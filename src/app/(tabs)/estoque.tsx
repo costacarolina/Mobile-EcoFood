@@ -1,4 +1,3 @@
-
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   Image,
@@ -11,8 +10,65 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useState } from "react";
+
+type Categoria = "Geladeira" | "Freezer" | "Despensa";
+
+type Produto = {
+  id: number;
+  nome: string;
+  validade: string;
+  quantidade: string;
+  dias: string;
+  emoji: string;
+};
 
 export default function Estoque() {
+  const [categoriaSelecionada, setCategoriaSelecionada] =
+    useState<Categoria>("Geladeira");
+
+  const [busca, setBusca] = useState("");
+
+  const produtos: Record<Categoria, Produto[]> = {
+    Geladeira: [
+      {
+        id: 1,
+        nome: "Tomate Italiano 1kg",
+        validade: "Vence em 21/10 (2 dias)",
+        quantidade: "Estoque: 2,3 kg",
+        dias: "2 dias",
+        emoji: "🍅",
+      },
+    ],
+
+    Freezer: [
+      {
+        id: 2,
+        nome: "Peito de Frango",
+        validade: "Vence em 25/10",
+        quantidade: "Estoque: 2 kg",
+        dias: "6 dias",
+        emoji: "🍗",
+      },
+    ],
+
+    Despensa: [
+      {
+        id: 3,
+        nome: "Arroz Integral 1kg",
+        validade: "Vence em 20/12",
+        quantidade: "Estoque: 3 pacotes",
+        dias: "62 dias",
+        emoji: "🍚",
+      },
+    ],
+  };
+
+  const produtosFiltrados = produtos[categoriaSelecionada].filter(
+    (produto) =>
+      produto.nome.toLowerCase().includes(busca.toLowerCase())
+  );
+
   return (
     <LinearGradient
       colors={[
@@ -55,19 +111,34 @@ export default function Estoque() {
 
         {/* CATEGORIAS */}
         <View style={styles.categorias}>
-          <TouchableOpacity style={styles.categoriaAtiva}>
-            <Text style={styles.textoCategoriaAtiva}>
-              Geladeira
-            </Text>
-          </TouchableOpacity>
+          {(["Geladeira", "Freezer", "Despensa"] as const).map(
+            (categoria) => {
+              const ativa = categoriaSelecionada === categoria;
 
-          <TouchableOpacity style={styles.categoria}>
-            <Text style={styles.textoCategoria}>Freezer</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.categoria}>
-            <Text style={styles.textoCategoria}>Despensa</Text>
-          </TouchableOpacity>
+              return (
+                <TouchableOpacity
+                  key={categoria}
+                  style={[
+                    styles.categoria,
+                    ativa && styles.categoriaAtiva,
+                  ]}
+                  onPress={() => {
+                    setCategoriaSelecionada(categoria);
+                    setBusca("");
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.textoCategoria,
+                      ativa && styles.textoCategoriaAtiva,
+                    ]}
+                  >
+                    {categoria}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }
+          )}
         </View>
 
         {/* BUSCA */}
@@ -83,7 +154,19 @@ export default function Estoque() {
               placeholder="Buscar produto"
               placeholderTextColor="#888888"
               style={styles.inputBusca}
+              value={busca}
+              onChangeText={setBusca}
             />
+
+            {busca.length > 0 && (
+              <TouchableOpacity onPress={() => setBusca("")}>
+                <Ionicons
+                  name="close-circle"
+                  size={20}
+                  color="#888888"
+                />
+              </TouchableOpacity>
+            )}
           </View>
 
           <TouchableOpacity>
@@ -98,103 +181,117 @@ export default function Estoque() {
         {/* LISTA DE PRODUTOS */}
         <ScrollView
           style={styles.lista}
+          contentContainerStyle={styles.listaConteudo}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.alerta}>
-            <View style={styles.alertaTitulo}>
+          {/* ALERTA DE VENCIMENTO DA GELADEIRA */}
+          {categoriaSelecionada === "Geladeira" &&
+            produtosFiltrados.length > 0 && (
+              <View style={styles.alerta}>
+                <View style={styles.alertaTitulo}>
+                  <Ionicons
+                    name="alert-circle"
+                    size={17}
+                    color="#F05252"
+                  />
+
+                  <Text style={styles.textoAlerta}>
+                    1 produto próximo do vencimento
+                  </Text>
+                </View>
+
+                {produtosFiltrados.map((produto) => (
+                  <View
+                    key={produto.id}
+                    style={styles.cardProduto}
+                  >
+                    <View style={styles.imagemProduto}>
+                      <Text style={styles.emojiProduto}>
+                        {produto.emoji}
+                      </Text>
+                    </View>
+
+                    <View style={styles.dadosProduto}>
+                      <Text style={styles.nomeProduto}>
+                        {produto.nome}
+                      </Text>
+
+                      <Text style={styles.validade}>
+                        {produto.validade}
+                      </Text>
+
+                      <Text style={styles.estoque}>
+                        {produto.quantidade}
+                      </Text>
+                    </View>
+
+                    <Text style={styles.dias}>
+                      {produto.dias}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+          {/* TÍTULO DA CATEGORIA */}
+          <Text style={styles.tituloCategoria}>
+            {categoriaSelecionada}
+          </Text>
+
+          {/* PRODUTOS */}
+          {produtosFiltrados.length > 0 ? (
+            produtosFiltrados.map((produto) => (
+              <View
+                key={produto.id}
+                style={[
+                  styles.cardProduto,
+                  styles.cardLista,
+                ]}
+              >
+                <View style={styles.imagemProduto}>
+                  <Text style={styles.emojiProduto}>
+                    {produto.emoji}
+                  </Text>
+                </View>
+
+                <View style={styles.dadosProduto}>
+                  <Text style={styles.nomeProduto}>
+                    {produto.nome}
+                  </Text>
+
+                  <Text style={styles.validade}>
+                    {produto.validade}
+                  </Text>
+
+                  <Text style={styles.estoque}>
+                    {produto.quantidade}
+                  </Text>
+                </View>
+
+                <TouchableOpacity>
+                  <Ionicons
+                    name="ellipsis-vertical"
+                    size={20}
+                    color="#777777"
+                  />
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <View style={styles.vazio}>
               <Ionicons
-                name="alert-circle"
-                size={17}
-                color="#F05252"
+                name="search-outline"
+                size={35}
+                color="#A0A0A0"
               />
 
-              <Text style={styles.textoAlerta}>
-                1 produto próximo do vencimento
+              <Text style={styles.textoVazio}>
+                Nenhum produto encontrado.
               </Text>
             </View>
-
-            {/* PRODUTO DE EXEMPLO */}
-            <View style={styles.cardProduto}>
-              <View style={styles.imagemProduto}>
-                <Text style={styles.emojiProduto}>🍅</Text>
-              </View>
-
-              <View style={styles.dadosProduto}>
-                <Text style={styles.nomeProduto}>
-                  Tomate Italiano 1kg
-                </Text>
-
-                <Text style={styles.validade}>
-                  Vence em 16/10 (2 dias)
-                </Text>
-
-                <Text style={styles.estoque}>
-                  Estoque: 2,3 kg
-                </Text>
-              </View>
-
-              <Text style={styles.dias}>
-                2 dias
-              </Text>
-            </View>
-          </View>
+          )}
         </ScrollView>
-
-        {/* MENU INFERIOR */}
-        <View style={styles.menuInferior}>
-          <TouchableOpacity
-            style={styles.itemMenu}
-            onPress={() => router.push("/")}
-          >
-            <Ionicons
-              name="home-outline"
-              size={27}
-              color="#858585"
-            />
-            <Text style={styles.textoMenu}>Início</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.itemMenu}>
-            <Ionicons
-              name="clipboard-outline"
-              size={27}
-              color="#858585"
-            />
-            <Text style={styles.textoMenu}>
-              Lista de Compras
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.botaoAdicionar}
-          >
-            <Ionicons
-              name="add"
-              size={37}
-              color="#FFFFFF"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.itemMenu}>
-            <MaterialCommunityIcons
-              name="archive"
-              size={28}
-              color="#216641"
-            />
-            <Text style={styles.textoMenuAtivo}>
-              Estoque
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.itemMenu}>
-            <Ionicons
-              name="person-outline"
-              size={27}
-              color="#858585"
-            />
-            <Text style={styles.textoMenu}>Perfil</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </LinearGradient>
   );
@@ -234,18 +331,8 @@ const styles = StyleSheet.create({
   },
 
   categoriaAtiva: {
-    flex: 1,
-    height: 42,
     backgroundColor: "#216641",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  textoCategoriaAtiva: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "500",
+    borderColor: "#216641",
   },
 
   categoria: {
@@ -257,6 +344,12 @@ const styles = StyleSheet.create({
     borderColor: "#DADADA",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  textoCategoriaAtiva: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "500",
   },
 
   textoCategoria: {
@@ -296,13 +389,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  listaConteudo: {
+    paddingBottom: 20,
+  },
+
   alerta: {
     backgroundColor: "#FAF7F1",
     marginHorizontal: 21,
     borderRadius: 20,
     padding: 10,
     paddingTop: 18,
-    minHeight: 145,
+    marginBottom: 20,
   },
 
   alertaTitulo: {
@@ -318,6 +415,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
+  tituloCategoria: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#214D35",
+    marginHorizontal: 22,
+    marginBottom: 10,
+  },
+
   cardProduto: {
     minHeight: 72,
     backgroundColor: "#FFFFFF",
@@ -328,6 +433,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 7,
     paddingVertical: 7,
+  },
+
+  cardLista: {
+    marginHorizontal: 21,
+    marginBottom: 8,
   },
 
   imagemProduto: {
@@ -369,6 +479,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "500",
     marginHorizontal: 5,
+  },
+
+  vazio: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 35,
+  },
+
+  textoVazio: {
+    fontSize: 14,
+    color: "#858585",
+    marginTop: 10,
   },
 
   menuInferior: {
