@@ -110,6 +110,15 @@ export default function Home() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="notificacoes"
+        options={{
+          title: "Notificações",
+          href: null,
+        }}
+      />
+      
     </Tabs>
   );
 }

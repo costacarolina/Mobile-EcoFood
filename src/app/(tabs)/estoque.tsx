@@ -1,76 +1,97 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import {
-  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useState, useCallback } from "react";
+import { getUsuario } from "@/lib/session";
 import { useTheme } from "../../../context/themeContext";
+import { getProdutos, Produto } from "../../api/get-estoque";
+
 
 type Categoria = "Geladeira" | "Freezer" | "Despensa";
-
-type Produto = {
-  id: number;
-  nome: string;
-  validade: string;
-  quantidade: string;
-  dias: string;
-  emoji: string;
-};
 
 export default function Estoque() {
   const { darkMode } = useTheme();
 
-  const [categoriaSelecionada, setCategoriaSelecionada] =
-    useState<Categoria>("Geladeira");
-
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>("Geladeira");
   const [busca, setBusca] = useState("");
+  
+  const [produtosInativos, setProdutos] = useState<Produto[]>([]);
+  const [totalProximosVencimento, setTotalProximosVencimento] = useState(0);
+  const [carregando, setCarregando] = useState(true);
 
-  const produtos: Record<Categoria, Produto[]> = {
-    Geladeira: [
-      {
-        id: 1,
-        nome: "Tomate Italiano 1kg",
-        validade: "Vence em 21/10 (2 dias)",
-        quantidade: "Estoque: 2,3 kg",
-        dias: "2 dias",
-        emoji: "🍅",
-      },
-    ],
+  useFocusEffect(
+  useCallback(() => {
+    async function carregarEstoque() {
+      try {
+        setCarregando(true);
+        const dados = await getProdutos(getUsuario()?.id, categoriaSelecionada, busca);
 
-    Freezer: [
-      {
-        id: 2,
-        nome: "Peito de Frango",
-        validade: "Vence em 25/10",
-        quantidade: "Estoque: 2 kg",
-        dias: "6 dias",
-        emoji: "🍗",
-      },
-    ],
+        console.log("ESTOQUE:", "restaurante", getUsuario()?.id, "| local", categoriaSelecionada, "| veio", dados.produtos.length, "produtos");
 
-    Despensa: [
-      {
-        id: 3,
-        nome: "Arroz Integral 1kg",
-        validade: "Vence em 20/12",
-        quantidade: "Estoque: 3 pacotes",
-        dias: "62 dias",
-        emoji: "🍚",
-      },
-    ],
-  };
+        setProdutos(dados.produtos);
+        setTotalProximosVencimento(dados.totalProximosVencimento);
+      } catch (error) {
+        console.error("Erro ao carregar a tela de estoque", error);
+      } finally {
+        setCarregando(false);
+      }
+    }
 
-  const produtosFiltrados = produtos[categoriaSelecionada].filter(
-    (produto) =>
-      produto.nome.toLowerCase().includes(busca.toLowerCase())
-  );
+    const timer = setTimeout(() => {
+      carregarEstoque();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [categoriaSelecionada, busca])
+);
+
+  function getEmojiParaProduto(nomeProduto: string, localArmazenamento: string) {
+    const nome = nomeProduto ? nomeProduto.toLowerCase() : "";
+
+    // Frutas e Hortifruti específicos
+    if (nome.includes("banana")) return "🍌";
+    if (nome.includes("maçã") || nome.includes("maca")) return "🍎";
+    if (nome.includes("tomate")) return "🍅";
+    if (nome.includes("alface") || nome.includes("salada")) return "🥬";
+    
+    // Carnes e Proteínas
+    if (nome.includes("frango") || nome.includes("peito")) return "🍗";
+    if (nome.includes("carne") || nome.includes("bife") || nome.includes("boi")) return "🥩";
+    if (nome.includes("peixe")) return "🐟";
+    
+    // Grãos e Despensa
+    if (nome.includes("arroz")) return "🍚";
+    if (nome.includes("feijão") || nome.includes("feijao")) return "🫘";
+    if (nome.includes("pão") || nome.includes("pao")) return "🍞";
+    
+    // Laticínios
+    if (nome.includes("leite")) return "🥛";
+    if (nome.includes("queijo")) return "🧀";
+    if (nome.includes("ovo") || nome.includes("ovos")) return "🥚";
+    
+    // Bebidas
+    if (nome.includes("suco") || nome.includes("refrigerante") || nome.includes("agua")) return "🧃";
+
+    // Se não encontrar nenhuma palavra-chave no nome, usa o emoji padrão do local
+    const localUpper = localArmazenamento ? localArmazenamento.toUpperCase() : "";
+    if (localUpper.includes("Geladeira")) return "🥗";
+    if (localUpper.includes("Freezer")) return "🥩";
+    if (localUpper.includes("Despensa")) return "🍚";
+    
+    return "📦";
+  }
+
+  const produtosFiltrados = produtosInativos;
+  const produtosEmAlerta = produtosFiltrados.filter(p => p.diasRestantes <= 7);
 
   function abrirDetalhes(produto: Produto) {
     router.push({
@@ -78,10 +99,10 @@ export default function Estoque() {
       params: {
         id: String(produto.id),
         nome: produto.nome,
-        validade: produto.validade,
-        quantidade: produto.quantidade,
-        dias: produto.dias,
-        emoji: produto.emoji,
+        validade: new Date(produto.dataValidade).toLocaleDateString("pt-BR"),
+        quantidade: `Estoque: ${produto.quantidade} ${produto.unidade}`,
+        dias: `${produto.diasRestantes} dias`,
+        emoji: getEmojiParaProduto(produto.nome, produto.localArmazenamento),
       },
     });
   }
@@ -109,9 +130,7 @@ export default function Estoque() {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ transform: [{ translateY: 35 }] }}
-          >
+          <TouchableOpacity style={{ transform: [{ translateY: 35 }] }}>
             <Ionicons
               name="ellipsis-vertical"
               size={25}
@@ -121,10 +140,7 @@ export default function Estoque() {
         </View>
 
         <Text
-          style={[
-            styles.titulo,
-            { color: darkMode ? "#FFFFFF" : "#000000" },
-          ]}
+          style={[styles.titulo, { color: darkMode ? "#FFFFFF" : "#000000" }]}
         >
           Estoque
         </Text>
@@ -133,7 +149,6 @@ export default function Estoque() {
           {(["Geladeira", "Freezer", "Despensa"] as const).map(
             (categoria) => {
               const ativa = categoriaSelecionada === categoria;
-
               return (
                 <TouchableOpacity
                   key={categoria}
@@ -153,9 +168,7 @@ export default function Estoque() {
                   <Text
                     style={[
                       styles.textoCategoria,
-                      {
-                        color: darkMode ? "#E0E0E0" : "#666666",
-                      },
+                      { color: darkMode ? "#E0E0E0" : "#666666" },
                       ativa && styles.textoCategoriaAtiva,
                     ]}
                   >
@@ -204,14 +217,6 @@ export default function Estoque() {
               </TouchableOpacity>
             )}
           </View>
-
-          <TouchableOpacity>
-            <Ionicons
-              name="filter-outline"
-              size={25}
-              color={darkMode ? "#CCCCCC" : "#777777"}
-            />
-          </TouchableOpacity>
         </View>
 
         <ScrollView
@@ -220,33 +225,91 @@ export default function Estoque() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {categoriaSelecionada === "Geladeira" &&
-            produtosFiltrados.length > 0 && (
-              <View
+          {carregando ? (
+            <ActivityIndicator size="large" color="#216641" style={{ marginTop: 50 }} />
+          ) : (
+            <>
+              {produtosEmAlerta.length > 0 && (
+                <View
+                  style={[
+                    styles.alerta,
+                    { backgroundColor: darkMode ? "#30251F" : "#FAF7F1" },
+                  ]}
+                >
+                  <View style={styles.alertaTitulo}>
+                    <Ionicons name="alert-circle" size={17} color="#F05252" />
+                    <Text style={styles.textoAlerta}>
+                      {produtosEmAlerta.length} {produtosEmAlerta.length === 1 ? 'produto próximo' : 'produtos próximos'} do vencimento
+                    </Text>
+                  </View>
+
+                  {produtosEmAlerta.map((produto) => (
+                    <TouchableOpacity
+                      key={`alerta-${produto.id}`}
+                      style={[
+                        styles.cardProduto,
+                        {
+                          backgroundColor: darkMode ? "#252525" : "#FFFFFF",
+                          borderColor: darkMode ? "#444444" : "#F0EDE8",
+                        },
+                      ]}
+                      onPress={() => abrirDetalhes(produto)}
+                      activeOpacity={0.8}
+                    >
+                      <View style={styles.imagemProduto}>
+                        <Text style={styles.emojiProduto}>
+                          {getEmojiParaProduto(produto.nome, produto.localArmazenamento)}
+                        </Text>
+                      </View>
+
+                      <View style={styles.dadosProduto}>
+                        <Text
+                          style={[
+                            styles.nomeProduto,
+                            { color: darkMode ? "#FFFFFF" : "#505050" },
+                          ]}
+                        >
+                          {produto.nome}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.validade,
+                            { color: darkMode ? "#DDDDDD" : "#454545" },
+                          ]}
+                        >
+                          Vence em {new Date(produto.dataValidade).toLocaleDateString("pt-BR")}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.estoque,
+                            { color: darkMode ? "#BBBBBB" : "#707070" },
+                          ]}
+                        >
+                          Estoque: {produto.quantidade} {produto.unidade}
+                        </Text>
+                      </View>
+                      <Text style={styles.dias}>{produto.diasRestantes} dias</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+
+              <Text
                 style={[
-                  styles.alerta,
-                  {
-                    backgroundColor: darkMode ? "#30251F" : "#FAF7F1",
-                  },
+                  styles.tituloCategoria,
+                  { color: darkMode ? "#C1E3CC" : "#214D35" },
                 ]}
               >
-                <View style={styles.alertaTitulo}>
-                  <Ionicons
-                    name="alert-circle"
-                    size={17}
-                    color="#F05252"
-                  />
+                {categoriaSelecionada}
+              </Text>
 
-                  <Text style={styles.textoAlerta}>
-                    1 produto próximo do vencimento
-                  </Text>
-                </View>
-
-                {produtosFiltrados.map((produto) => (
+              {produtosFiltrados.length > 0 ? (
+                produtosFiltrados.map((produto) => (
                   <TouchableOpacity
                     key={produto.id}
                     style={[
                       styles.cardProduto,
+                      styles.cardLista,
                       {
                         backgroundColor: darkMode ? "#252525" : "#FFFFFF",
                         borderColor: darkMode ? "#444444" : "#F0EDE8",
@@ -257,7 +320,7 @@ export default function Estoque() {
                   >
                     <View style={styles.imagemProduto}>
                       <Text style={styles.emojiProduto}>
-                        {produto.emoji}
+                        {getEmojiParaProduto(produto.nome, produto.localArmazenamento)}
                       </Text>
                     </View>
 
@@ -270,117 +333,48 @@ export default function Estoque() {
                       >
                         {produto.nome}
                       </Text>
-
                       <Text
                         style={[
                           styles.validade,
                           { color: darkMode ? "#DDDDDD" : "#454545" },
                         ]}
                       >
-                        {produto.validade}
+                        Vence em {new Date(produto.dataValidade).toLocaleDateString("pt-BR")}
                       </Text>
-
                       <Text
                         style={[
                           styles.estoque,
                           { color: darkMode ? "#BBBBBB" : "#707070" },
                         ]}
                       >
-                        {produto.quantidade}
+                        Estoque: {produto.quantidade} {produto.unidade}
                       </Text>
                     </View>
-
-                    <Text style={styles.dias}>
-                      {produto.dias}
-                    </Text>
+                    <Ionicons
+                      name="ellipsis-vertical"
+                      size={20}
+                      color={darkMode ? "#BBBBBB" : "#777777"}
+                    />
                   </TouchableOpacity>
-                ))}
-              </View>
-            )}
-
-          <Text
-            style={[
-              styles.tituloCategoria,
-              { color: darkMode ? "#C1E3CC" : "#214D35" },
-            ]}
-          >
-            {categoriaSelecionada}
-          </Text>
-
-          {produtosFiltrados.length > 0 ? (
-            produtosFiltrados.map((produto) => (
-              <TouchableOpacity
-                key={produto.id}
-                style={[
-                  styles.cardProduto,
-                  styles.cardLista,
-                  {
-                    backgroundColor: darkMode ? "#252525" : "#FFFFFF",
-                    borderColor: darkMode ? "#444444" : "#F0EDE8",
-                  },
-                ]}
-                onPress={() => abrirDetalhes(produto)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.imagemProduto}>
-                  <Text style={styles.emojiProduto}>
-                    {produto.emoji}
+                ))
+              ) : (
+                <View style={styles.vazio}>
+                  <Ionicons
+                    name="search-outline"
+                    size={35}
+                    color={darkMode ? "#BBBBBB" : "#A0A0A0"}
+                  />
+                  <Text
+                    style={[
+                      styles.textoVazio,
+                      { color: darkMode ? "#BBBBBB" : "#858585" },
+                    ]}
+                  >
+                    Nenhum produto encontrado.
                   </Text>
                 </View>
-
-                <View style={styles.dadosProduto}>
-                  <Text
-                    style={[
-                      styles.nomeProduto,
-                      { color: darkMode ? "#FFFFFF" : "#505050" },
-                    ]}
-                  >
-                    {produto.nome}
-                  </Text>
-
-                  <Text
-                    style={[
-                      styles.validade,
-                      { color: darkMode ? "#DDDDDD" : "#454545" },
-                    ]}
-                  >
-                    {produto.validade}
-                  </Text>
-
-                  <Text
-                    style={[
-                      styles.estoque,
-                      { color: darkMode ? "#BBBBBB" : "#707070" },
-                    ]}
-                  >
-                    {produto.quantidade}
-                  </Text>
-                </View>
-
-                <Ionicons
-                  name="ellipsis-vertical"
-                  size={20}
-                  color={darkMode ? "#BBBBBB" : "#777777"}
-                />
-              </TouchableOpacity>
-            ))
-          ) : (
-            <View style={styles.vazio}>
-              <Ionicons
-                name="search-outline"
-                size={35}
-                color={darkMode ? "#BBBBBB" : "#A0A0A0"}
-              />
-
-              <Text
-                style={[
-                  styles.textoVazio,
-                  { color: darkMode ? "#BBBBBB" : "#858585" },
-                ]}
-              >
-                Nenhum produto encontrado.
-              </Text>
-            </View>
+              )}
+            </>
           )}
         </ScrollView>
       </View>

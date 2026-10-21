@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/../context/themeContext";
-import { getFoto, getUsuario, salvarFoto } from "@/lib/session";
+import { getFoto, getUsuario, salvarFoto, sair } from "@/lib/session";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 import {
     ScrollView,
     View,
@@ -12,7 +13,7 @@ import {
     Image,
     TextInput,
 } from "react-native";
-
+import { api } from "@/lib/axios";
 import { useState, useEffect } from "react";
 
 export default function Perfil() {
@@ -45,12 +46,11 @@ export default function Perfil() {
     };
 
     const [dados, setDados] = useState({
-        nome: usuario?.name ?? "Sabor & Mesa",
-        cozinha: "Contemporânea",
-        endereco: "Rua das Auras, 067\nCentro, São Paulo - SP",
-        telefone: "(11) 99999-9999",
-        email: usuario?.email ?? "contato@saboremesa.com.br",
-        cnpj: "12.345.678/0001-90",
+        nome: usuario?.name ?? "",
+        endereco: usuario?.endereco ?? "",
+        telefone: usuario?.telefone ?? "",
+        email: usuario?.email ?? "",
+        cnpj: usuario?.cnpj ?? "",
     });
 
     const [dadosEditados, setDadosEditados] = useState(dados);
@@ -150,9 +150,7 @@ export default function Perfil() {
                                 { color: colors.secondary },
                             ]}
                         >
-                            Cozinha {dados.cozinha.toLowerCase()}
-                            {"\n"}
-                            com propósito
+                            Cozinha com propósito
                         </Text>
 
                         <View style={styles.statusLinha}>
@@ -226,18 +224,6 @@ export default function Perfil() {
                                     setDadosEditados({
                                         ...dadosEditados,
                                         nome: valor,
-                                    })
-                                }
-                                colors={colors}
-                            />
-
-                            <CampoEdicao
-                                titulo="Tipo de cozinha"
-                                valor={dadosEditados.cozinha}
-                                onChangeText={(valor: string) =>
-                                    setDadosEditados({
-                                        ...dadosEditados,
-                                        cozinha: valor,
                                     })
                                 }
                                 colors={colors}
@@ -331,12 +317,6 @@ export default function Perfil() {
                                 colors={colors}
                             />
 
-                            <InfoLinha
-                                icon="restaurant-outline"
-                                titulo="Tipo de cozinha"
-                                valor={dados.cozinha}
-                                colors={colors}
-                            />
 
                             <InfoLinha
                                 icon="location-outline"
@@ -403,9 +383,13 @@ export default function Perfil() {
                     </View>
                 </View>
 
-                {/* SAIR */}
-
-                <TouchableOpacity style={styles.botaoSair}>
+                <TouchableOpacity
+                    style={styles.botaoSair}
+                    onPress={() => {
+                        sair();
+                        router.replace("/login");
+                    }}
+                >
                     <Text style={styles.textoSair}>
                         Sair da conta
                     </Text>

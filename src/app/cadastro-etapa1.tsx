@@ -17,6 +17,7 @@ export default function CadastroRestaurante() {
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [tipoCozinha, setTipoCozinha] = useState("");
   const [cnpj, setCnpj] = useState("");
 
   return (
@@ -66,20 +67,6 @@ export default function CadastroRestaurante() {
               style={styles.input}
               value={nome}
               onChangeText={setNome}
-            />
-          </View>
-
-          <Text style={styles.label}>Tipo de Cozinha</Text>
-          <View style={styles.inputContainer}>
-            <MaterialCommunityIcons
-              name="chef-hat"
-              size={22}
-              color="#284f37"
-            />
-            <TextInput
-              placeholder="Ex.: Contemporânea"
-              placeholderTextColor="#9A9A9A"
-              style={styles.input}
             />
           </View>
 

@@ -19,25 +19,54 @@ export default function DetalhesProduto() {
   const params = useLocalSearchParams<{
     id?: string;
     nome?: string;
+    categoria?: string;          // <-- Adicionado para receber
+    localArmazenamento?: string; // <-- Adicionado para receber
     validade?: string;
     quantidade?: string;
     dias?: string;
-    emoji?: string;
   }>();
 
-  const nomeProduto = params.nome || "Tomate Italiano";
-  const emojiProduto = params.emoji || "🍅";
+  // Função de emoji que você já gosta
+  function getEmojiParaProduto(nomeProduto: string, localArmazenamento: string) {
+    const nome = nomeProduto ? nomeProduto.toLowerCase() : "";
+    if (nome.includes("banana")) return "🍌";
+    if (nome.includes("maçã") || nome.includes("maca")) return "🍎";
+    if (nome.includes("tomate")) return "🍅";
+    if (nome.includes("alface") || nome.includes("salada")) return "🥬";
+    if (nome.includes("frango") || nome.includes("peito")) return "🍗";
+    if (nome.includes("carne") || nome.includes("bife") || nome.includes("boi")) return "🥩";
+    if (nome.includes("arroz")) return "🍚";
+    if (nome.includes("feijão") || nome.includes("feijao")) return "🫘";
+    if (nome.includes("leite")) return "🥛";
+    if (nome.includes("queijo")) return "🧀";
+    if (nome.includes("ovo")) return "🥚";
+
+    const localUpper = localArmazenamento ? localArmazenamento.toUpperCase() : "";
+    if (localUpper.includes("GELADEIRA")) return "🥗";
+    if (localUpper.includes("FREEZER")) return "🥩";
+    if (localUpper.includes("DESPENSA")) return "🍚";
+    return "📦";
+  }
+
+  const nomeProduto = params.nome || "Produto";
+  const localParam = params.localArmazenamento || "Geladeira";
+  const categoriaParam = params.categoria || "Geral";
+  const emojiProduto = getEmojiParaProduto(nomeProduto, localParam);
+  
   const validadeProduto = params.validade || "10/08/2026";
   const quantidadeProduto = params.quantidade
     ? params.quantidade.replace(/^Estoque:\s*/i, "")
-    : "2,3kg";
-  const diasProduto = params.dias || "2 dias";
+    : "1";
+  const diasProduto = params.dias || "0 dias";
 
   const [editando, setEditando] = useState(false);
   const [status, setStatus] = useState("Próximo do vencimento");
   const [quantidade, setQuantidade] = useState(quantidadeProduto);
-  const [categoria, setCategoria] = useState("Hortifruti");
-  const [local, setLocal] = useState("Geladeira");
+  
+  // Aqui entram os estados com os valores reais que vieram da tela anterior:
+  const [categoria, setCategoria] = useState(categoriaParam);
+  const [local, setLocal] = useState(localParam);
+  
   const [validade, setValidade] = useState(validadeProduto);
 
   function salvarEdicao() {
@@ -45,19 +74,6 @@ export default function DetalhesProduto() {
     Alert.alert(
       "Produto atualizado",
       "As informações do produto foram alteradas com sucesso."
-    );
-  }
-
-  function alterarStatus() {
-    const novoStatus =
-      status === "Próximo do vencimento"
-        ? "Em estoque"
-        : "Próximo do vencimento";
-
-    setStatus(novoStatus);
-    Alert.alert(
-      "Status alterado",
-      `O produto agora está como "${novoStatus}".`
     );
   }
 
@@ -188,7 +204,7 @@ export default function DetalhesProduto() {
             </Text>
 
             <Text style={styles.avisoValidade}>
-              {status}
+              {status} ({diasProduto})
             </Text>
           </View>
         </View>
@@ -265,7 +281,7 @@ export default function DetalhesProduto() {
                 { color: darkMode ? "#EEEEEE" : "#111111" },
               ]}
             >
-              05/08/2026
+              {new Date().toLocaleDateString("pt-BR")}
             </Text>
           </View>
         </View>
@@ -295,11 +311,19 @@ export default function DetalhesProduto() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.botaoStatus}
-            onPress={() => router.push("/status")}
-          >
-            <Text style={styles.textoBotaoStatus}>Status</Text>
-          </TouchableOpacity>
+    style={styles.botaoStatus}
+    onPress={() => router.push({
+      pathname: "/status",
+      params: {
+        id: params.id,
+        nome: nomeProduto,
+        localArmazenamento: local,
+        dias: params.dias
+      }
+    })}
+  >
+    <Text style={styles.textoBotaoStatus}>Status</Text>
+  </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -311,7 +335,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-
   cabecalho: {
     height: 150,
     flexDirection: "row",
@@ -321,14 +344,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     backgroundColor: "#FFFFFF",
   },
-
   botaoVoltar: {
     width: 40,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
   },
-
   tituloCabecalho: {
     flex: 1,
     fontSize: 17,
@@ -336,20 +357,16 @@ const styles = StyleSheet.create({
     color: "#173B2C",
     textAlign: "center",
   },
-
   espacoCabecalho: {
     width: 40,
   },
-
   conteudo: {
     flex: 1,
   },
-
   conteudoInterno: {
     paddingHorizontal: 5,
     paddingBottom: 25,
   },
-
   cardProduto: {
     minHeight: 115,
     borderRadius: 12,
@@ -369,7 +386,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
-
   areaImagem: {
     width: 75,
     height: 75,
@@ -378,29 +394,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   emojiTomate: {
     fontSize: 48,
   },
-
   infoProduto: {
     flex: 1,
     marginLeft: 12,
   },
-
   nomeProduto: {
     fontSize: 19,
     fontWeight: "600",
     color: "#171717",
     marginBottom: 5,
   },
-
   avisoValidade: {
     fontSize: 14,
     fontWeight: "600",
     color: "#FF2929",
   },
-
   cardInformacoes: {
     backgroundColor: "#FFFFFF",
     borderRadius: 5,
@@ -414,7 +425,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     paddingHorizontal: 11,
   },
-
   linhaInformacao: {
     minHeight: 62,
     flexDirection: "row",
@@ -423,23 +433,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#D8D8D8",
   },
-
   ultimaLinha: {
     borderBottomWidth: 0,
   },
-
   nomeCampo: {
     fontSize: 15,
     color: "#111111",
   },
-
   valorCampo: {
     flexShrink: 1,
     fontSize: 13,
     color: "#111111",
     textAlign: "right",
   },
-
   inputEdicao: {
     minWidth: 90,
     height: 30,
@@ -450,14 +456,12 @@ const styles = StyleSheet.create({
     textAlign: "right",
     paddingVertical: 0,
   },
-
   areaBotoes: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 27,
     paddingHorizontal: 2,
   },
-
   botaoEditar: {
     width: "47%",
     height: 52,
@@ -474,13 +478,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
-
   textoBotaoEditar: {
     fontSize: 15,
     color: "#111111",
     fontWeight: "500",
   },
-
   botaoStatus: {
     width: "47%",
     height: 52,
@@ -497,7 +499,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
-
   textoBotaoStatus: {
     fontSize: 15,
     color: "#FFFFFF",

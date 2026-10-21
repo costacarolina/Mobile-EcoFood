@@ -14,12 +14,54 @@ import {
     StyleSheet,
     Image,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { getTelaInicio } from "@/api/get-tela-inicio";
+import { getQuantidadeNotificacoes } from "@/api/get-notificacoes";
 
 export default function Home() {
     const { darkMode } = useTheme();
 
     const usuario = getUsuario();
+
+    const [home, setHome] = useState<any>(null);
+    const [notificacoes, setNotificacoes] = useState(0);
+    const [hora, setHora] = useState("");
+
+    useFocusEffect(
+        useCallback(() => {
+            const id = getUsuario()?.id;
+            if (!id) return;
+
+            getTelaInicio(id)
+                .then((dados) => {
+                    setHome(dados);
+                    setHora(
+                        new Date().toLocaleTimeString("pt-BR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })
+                    );
+                })
+                .catch((erro) =>
+                    console.log("Erro na home:", erro.response?.data || erro.message)
+                );
+
+            getQuantidadeNotificacoes(id)
+                .then(setNotificacoes)
+                .catch((erro) =>
+                    console.log("Erro nas notificações:", erro.response?.data || erro.message)
+                );
+        }, [])
+    );
+
+    const totalEstoque =
+        (home?.estoque?.geladeira ?? 0) +
+        (home?.estoque?.freezer ?? 0) +
+        (home?.estoque?.despensa ?? 0);
+    const pct = (n: number) =>
+        `${totalEstoque > 0 ? Math.round((n / totalEstoque) * 100) : 0}%`;
+    const kg = (n: number) => `${String(n ?? 0).replace(".", ",")} kg`;
 
     const colors = darkMode
         ? {
@@ -63,20 +105,29 @@ export default function Home() {
                     />
 
                     <View style={styles.icons}>
-                        <Ionicons
-                            name="notifications-outline"
-                            size={28}
-                            color={colors.text}
-                        />
+                        <TouchableOpacity onPress={() => router.push("/(tabs)/notificacoes")}>
+                            <Ionicons name="notifications-outline" size={28} color={colors.text} />
 
-                        <TouchableOpacity
-                            onPress={() => router.push("/adicionarProduto")}
-                        >
-                            <Ionicons
-                                name="scan-outline"
-                                size={28}
-                                color={colors.text}
-                            />
+                            {notificacoes > 0 && (
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        top: -4,
+                                        right: -6,
+                                        backgroundColor: colors.red,
+                                        borderRadius: 9,
+                                        minWidth: 18,
+                                        height: 18,
+                                        paddingHorizontal: 4,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "700" }}>
+                                        {notificacoes}
+                                    </Text>
+                                </View>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -155,6 +206,8 @@ export default function Home() {
                     )}
                 />
 
+                {home?.alerta && (
+
                 <View
                     style={[
                         styles.alerta,
@@ -186,7 +239,7 @@ export default function Home() {
                                 { color: colors.text },
                             ]}
                         >
-                            18 produtos próximos do vencimento.
+                            {home?.alerta?.mensagem}
                         </Text>
                     </View>
 
@@ -208,6 +261,7 @@ export default function Home() {
                         />
                     </TouchableOpacity>
                 </View>
+                )}
 
                 <View
                     style={[

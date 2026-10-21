@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function CadastroEtapa2() {
-  const { nome, endereco, telefone, cnpj } = useLocalSearchParams<{
+  const { nome, endereco, telefone, cnpj} = useLocalSearchParams<{
   nome: string;
   endereco: string;
   telefone: string;
@@ -74,15 +74,6 @@ const handleCadastro = () => {
         </View>
 
         <View style={styles.form}>
-          <Text style={styles.label}>Nome do responsável</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="person-outline" size={22} color="#234f32" />
-            <TextInput
-              placeholder="Ex.: Rafael Mendes"
-              placeholderTextColor="#9a9a9a"
-              style={styles.input}
-            />
-          </View>
 
           <Text style={styles.label}>E-mail</Text>
           <View style={styles.inputContainer}>
@@ -90,6 +81,7 @@ const handleCadastro = () => {
             <TextInput
               placeholder="Digite seu email"
               placeholderTextColor="#9a9a9a"
+              autoCapitalize="none"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -125,10 +117,10 @@ const handleCadastro = () => {
         </View>
 
         <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
-          <Text style={styles.textoBotao}>ENTRAR</Text>
+         <Text style={styles.textoBotao}>CADASTRAR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.cardLogin}>
+        <TouchableOpacity style={styles.cardLogin} onPress={() => router.replace("/login")}>
           <Text style={styles.textoConta}>Já possui uma conta?</Text>
           <Text style={styles.linkEntrar}>Entrar</Text>
         </TouchableOpacity>

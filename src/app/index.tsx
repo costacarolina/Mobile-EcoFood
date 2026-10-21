@@ -1,9 +1,11 @@
 import { Login } from "@/api/post-login";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
+
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { setUsuario } from "@/lib/session";
+import { setUsuario, setToken } from "@/lib/session";
+import { api } from "@/lib/axios";
 import { useState } from "react";
 import {
   Image,
@@ -19,16 +21,29 @@ export default function Index() {
   const [senha, setSenha] = useState("");
 
   const handleLogin = async () => {
-    Login(email, senha)
-      .then((response) => {
-        console.log("Login bem-sucedido:", response);
-        setUsuario(response.data.usuario);
-        router.replace("/(tabs)");
-      })
-      .catch((error) => {
-        alert("Falha no login. Verifique suas credenciais.");
-      });
-  }
+    try {
+      const response = await Login(email, senha);
+      const { token, usuario } = response.data;
+
+      await setToken(token);
+
+      let completo = usuario;
+      try {
+        const me = await api.get("/api/login/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("Dados do perfil:", me.data);
+        completo = { ...usuario, ...me.data };
+      } catch (erro: any) {
+        console.log("Erro ao buscar perfil:", erro.response?.status, erro.response?.data ?? erro.message);
+      }
+
+      setUsuario(completo);
+      router.replace("/(tabs)");
+    } catch (error) {
+      alert("Falha no login. Verifique suas credenciais.");
+    }
+  };
 
   return (
     <LinearGradient
