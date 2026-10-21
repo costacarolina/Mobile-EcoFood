@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { setUsuario } from "@/lib/session";
 import { useState } from "react";
 import {
   Image,
@@ -17,16 +18,17 @@ export default function Index() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const handleLogin = async () => { 
-      Login(email, senha)
-        .then((response) => {
-          console.log("Login bem-sucedido:", response);
-          router.replace("/(tabs)");
-        })
-        .catch((error) => {
-          alert("Falha no login. Verifique suas credenciais.");
-        });
-    }
+  const handleLogin = async () => {
+    Login(email, senha)
+      .then((response) => {
+        console.log("Login bem-sucedido:", response);
+        setUsuario(response.data.usuario);
+        router.replace("/(tabs)");
+      })
+      .catch((error) => {
+        alert("Falha no login. Verifique suas credenciais.");
+      });
+  }
 
   return (
     <LinearGradient
@@ -44,13 +46,13 @@ export default function Index() {
     >
       <View style={styles.topSection}>
 
-        
+
         <Image
           source={require("../../assets/images/logoecofood/logoecofood.png")}
           style={styles.logo}
         />
 
-      
+
         <Text style={styles.titulo}>
           Bem vindo de volta!
         </Text>
@@ -59,7 +61,7 @@ export default function Index() {
           Entre na sua conta para continuar.
         </Text>
 
-        
+
         <View style={styles.form}>
 
           <Text style={styles.label}>
@@ -78,6 +80,7 @@ export default function Index() {
               placeholder="Digite seu email"
               placeholderTextColor="#9e9e9e"
               style={styles.input}
+              autoCapitalize="none"
               value={email}
               onChangeText={setEmail}
             />
@@ -123,7 +126,7 @@ export default function Index() {
         </View>
       </View>
 
-      
+
       <View style={styles.bottomSection}>
 
         <TouchableOpacity style={styles.cardCadastro}>
@@ -131,12 +134,12 @@ export default function Index() {
           <Text style={styles.textoCadastro}>
             Ainda não possui uma conta?
           </Text>
-          
+
           <TouchableOpacity onPress={() => router.push("/cadastro-etapa1")}>
-          <Text style={styles.linkCadastro}>
+            <Text style={styles.linkCadastro}>
               Cadastre seu restaurante
-          </Text>
-</TouchableOpacity>
+            </Text>
+          </TouchableOpacity>
 
         </TouchableOpacity>
 

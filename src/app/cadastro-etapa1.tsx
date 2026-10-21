@@ -9,127 +9,148 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
+import { useState } from "react";
 import { router } from "expo-router";
 
 export default function CadastroRestaurante() {
+
+  const [nome, setNome] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [cnpj, setCnpj] = useState("");
+
   return (
-  <LinearGradient
-    colors={[
-      "#FFFFFF",
-      "#FFFFFF",
-      "#FFFFFF",
-      "#F4F8F4",
-      "#DCEBDD",
-      "#A8C9AD",
-      "#3f7045",
-    ]}
-    locations={[0, 0.35, 0.52, 0.63, 0.76, 0.9, 1]}
-    style={{ flex: 1 }}
-  >
-    <ScrollView
-      style={{ flex: 1, backgroundColor: "transparent" }}
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
+    <LinearGradient
+      colors={[
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#F4F8F4",
+        "#DCEBDD",
+        "#A8C9AD",
+        "#3f7045",
+      ]}
+      locations={[0, 0.35, 0.52, 0.63, 0.76, 0.9, 1]}
+      style={{ flex: 1 }}
     >
-      <Image
-        source={require("@/assets/images/logoecofood/logoecofood.png")}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.etapa}>1 de 2</Text>
-      <Text style={styles.subEtapa}>Dados do restaurante</Text>
-
-      <View style={styles.barraFundo}>
-        <View style={styles.barraProgresso} />
-      </View>
-
-      <View style={styles.form}>
-        <Text style={styles.label}>Nome do restaurante</Text>
-        <View style={styles.inputContainer}>
-          <MaterialCommunityIcons
-            name="storefront-outline"
-            size={22}
-            color="#284f37"
-          />
-          <TextInput
-            placeholder="Ex.: Sabor & Mesa"
-            placeholderTextColor="#9A9A9A"
-            style={styles.input}
-          />
-        </View>
-
-        <Text style={styles.label}>Tipo de Cozinha</Text>
-        <View style={styles.inputContainer}>
-          <MaterialCommunityIcons
-            name="chef-hat"
-            size={22}
-            color="#284f37"
-          />
-          <TextInput
-            placeholder="Ex.: Contemporânea"
-            placeholderTextColor="#9A9A9A"
-            style={styles.input}
-          />
-        </View>
-
-        <Text style={styles.label}>Endereço</Text>
-        <View style={styles.inputContainer}>
-          <Ionicons
-            name="mail-outline"
-            size={22}
-            color="#284f37"
-          />
-          <TextInput
-            placeholder="Rua, número, bairro"
-            placeholderTextColor="#9A9A9A"
-            style={styles.input}
-          />
-        </View>
-
-        <Text style={styles.label}>Telefone</Text>
-        <View style={styles.inputContainer}>
-          <Ionicons
-            name="call-outline"
-            size={22}
-            color="#284f37"
-          />
-          <TextInput
-            placeholder="(00) 00000-0000"
-            placeholderTextColor="#9A9A9A"
-            style={styles.input}
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <Text style={styles.label}>CNPJ</Text>
-        <View style={[styles.inputContainer, styles.inputAtivo]}>
-          <Ionicons
-            name="document-text-outline"
-            size={22}
-            color="#284f37"
-          />
-          <TextInput
-            placeholder="00.000.000/0000-00"
-            placeholderTextColor="#9A9A9A"
-            style={styles.input}
-          />
-        </View>
-      </View>
-
-      <TouchableOpacity style={styles.botao} onPress={() => router.push("/cadastro-etapa2")}>
-        <Text style={styles.textoBotao}>CONTINUAR</Text>
-
-        <Ionicons
-          name="arrow-forward"
-          size={24}
-          color="#FFF"
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "transparent" }}
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Image
+          source={require("@/assets/images/logoecofood/logoecofood.png")}
+          style={styles.logo}
+          resizeMode="contain"
         />
-      </TouchableOpacity>
-    </ScrollView>
-  </LinearGradient>
+
+        <Text style={styles.etapa}>1 de 2</Text>
+        <Text style={styles.subEtapa}>Dados do restaurante</Text>
+
+        <View style={styles.barraFundo}>
+          <View style={styles.barraProgresso} />
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.label}>Nome do restaurante</Text>
+          <View style={styles.inputContainer}>
+            <MaterialCommunityIcons
+              name="storefront-outline"
+              size={22}
+              color="#284f37"
+            />
+            <TextInput
+              placeholder="Ex.: Sabor & Mesa"
+              placeholderTextColor="#9A9A9A"
+              style={styles.input}
+              value={nome}
+              onChangeText={setNome}
+            />
+          </View>
+
+          <Text style={styles.label}>Tipo de Cozinha</Text>
+          <View style={styles.inputContainer}>
+            <MaterialCommunityIcons
+              name="chef-hat"
+              size={22}
+              color="#284f37"
+            />
+            <TextInput
+              placeholder="Ex.: Contemporânea"
+              placeholderTextColor="#9A9A9A"
+              style={styles.input}
+            />
+          </View>
+
+          <Text style={styles.label}>Endereço</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons
+              name="mail-outline"
+              size={22}
+              color="#284f37"
+            />
+            <TextInput
+              placeholder="Rua, número, bairro"
+              placeholderTextColor="#9A9A9A"
+              value={endereco}
+              onChangeText={setEndereco}
+              style={styles.input}
+            />
+          </View>
+
+          <Text style={styles.label}>Telefone</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons
+              name="call-outline"
+              size={22}
+              color="#284f37"
+            />
+            <TextInput
+              placeholder="(00) 00000-0000"
+              placeholderTextColor="#9A9A9A"
+              style={styles.input}
+              value={telefone}
+              onChangeText={setTelefone}
+              keyboardType="phone-pad"
+            />
+          </View>
+
+          <Text style={styles.label}>CNPJ</Text>
+          <View style={[styles.inputContainer, styles.inputAtivo]}>
+            <Ionicons
+              name="document-text-outline"
+              size={22}
+              color="#284f37"
+            />
+            <TextInput
+              placeholder="00.000.000/0000-00"
+              placeholderTextColor="#9A9A9A"
+              value={cnpj}
+              onChangeText={setCnpj}
+              style={styles.input}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity 
+        style={styles.botao} 
+        onPress={() =>
+          router.push({
+            pathname: "/cadastro-etapa2",
+            params: { nome, endereco, telefone, cnpj },
+          })
+        }>
+          <Text style={styles.textoBotao}>CONTINUAR</Text>
+
+          <Ionicons
+            name="arrow-forward"
+            size={24}
+            color="#FFF"
+          />
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
@@ -149,18 +170,18 @@ const styles = StyleSheet.create({
   },
 
   etapa: {
-  fontSize: 28,
-  fontWeight: "700",
-  color: "#1d5c35",
-  marginTop: 5,
-},
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#1d5c35",
+    marginTop: 5,
+  },
 
-subEtapa: {
-  fontSize: 18,
-  fontWeight: "600",
-  color: "#8d8d8d",
-  marginBottom: 15,
-},
+  subEtapa: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#8d8d8d",
+    marginBottom: 15,
+  },
 
   barraFundo: {
     width: "85%",

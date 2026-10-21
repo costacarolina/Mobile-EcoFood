@@ -1,7 +1,7 @@
 import InfoCard from "@/components/InfoCard";
 import CategoriaItem from "@/components/categoriaItem";
 import ImpactoItem from "@/components/impactoItem";
-
+import { getUsuario } from "@/lib/session";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/../context/themeContext";
 
@@ -18,6 +18,8 @@ import { router } from "expo-router";
 
 export default function Home() {
     const { darkMode } = useTheme();
+
+    const usuario = getUsuario();
 
     const colors = darkMode
         ? {
@@ -85,7 +87,7 @@ export default function Home() {
                         { color: colors.text },
                     ]}
                 >
-                    Bem-vindo, Chef Rafael
+                    Bem-vindo, {usuario?.name}
                 </Text>
 
                 <Text

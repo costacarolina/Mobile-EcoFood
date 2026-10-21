@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/../context/themeContext";
-
+import { getFoto, getUsuario, salvarFoto } from "@/lib/session";
+import * as ImagePicker from "expo-image-picker";
 import {
     ScrollView,
     View,
@@ -12,19 +13,43 @@ import {
     TextInput,
 } from "react-native";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Perfil() {
     const { darkMode, toggleDarkMode } = useTheme();
 
     const [editando, setEditando] = useState(false);
 
+    const usuario = getUsuario();
+    const [foto, setFoto] = useState<string | null>(null);
+
+    // ao abrir o perfil, carrega a foto salva desse usuário (se tiver)
+    useEffect(() => {
+        if (usuario) getFoto(usuario.id).then(setFoto);
+    }, []);
+
+    const escolherFoto = async () => {
+        const resultado = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ["images"],
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.2,
+            base64: true,
+        });
+
+        if (resultado.canceled || !usuario) return;
+
+        const novaFoto = `data:image/jpeg;base64,${resultado.assets[0].base64}`;
+        setFoto(novaFoto);
+        await salvarFoto(usuario.id, novaFoto);
+    };
+
     const [dados, setDados] = useState({
-        nome: "Sabor & Mesa",
+        nome: usuario?.name ?? "Sabor & Mesa",
         cozinha: "Contemporânea",
         endereco: "Rua das Auras, 067\nCentro, São Paulo - SP",
         telefone: "(11) 99999-9999",
-        email: "contato@saboremesa.com.br",
+        email: usuario?.email ?? "contato@saboremesa.com.br",
         cnpj: "12.345.678/0001-90",
     });
 
@@ -73,12 +98,24 @@ export default function Perfil() {
                         },
                     ]}
                 >
-                    {/* LOGO DO RESTAURANTE */}
-
-                    <Image
-                        source={require("../../../assets/images/logorestaurante/logorestaurante.png")}
-                        style={styles.logoRestaurante}
-                    />
+                    <TouchableOpacity onPress={escolherFoto}>
+                        {foto ? (
+                            <Image source={{ uri: foto }} style={styles.logoRestaurante} />
+                        ) : (
+                            <View
+                                style={[
+                                    styles.logoRestaurante,
+                                    {
+                                        backgroundColor: colors.border,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    },
+                                ]}
+                            >
+                                <Ionicons name="camera-outline" size={32} color={colors.secondary} />
+                            </View>
+                        )}
+                    </TouchableOpacity>
 
                     <View style={styles.infoRestaurante}>
                         <Text
@@ -683,7 +720,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
     },
-    
+
     switchContainer: {
         height: 72,
         justifyContent: "center",

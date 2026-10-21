@@ -1,4 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Cadastro } from "@/api/post-cadastro";
+import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -11,6 +14,32 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function CadastroEtapa2() {
+  const { nome, endereco, telefone, cnpj } = useLocalSearchParams<{
+  nome: string;
+  endereco: string;
+  telefone: string;
+  cnpj: string;
+}>();
+
+const [email, setEmail] = useState("");
+const [senha, setSenha] = useState("");
+const [confirmarSenha, setConfirmarSenha] = useState("");
+
+const handleCadastro = () => {
+  if (senha !== confirmarSenha) {
+    alert("As senhas não conferem.");
+    return;
+  }
+
+  Cadastro({ nome, endereco, telefone, cnpj, email, senha })
+    .then(() => {
+      alert("Cadastro realizado!");
+      router.replace("/");
+    })
+    .catch((error) => {
+      alert(error.response?.data?.error ?? "Falha no cadastro.");
+    });
+};
   return (
     <LinearGradient
       colors={[
@@ -61,6 +90,8 @@ export default function CadastroEtapa2() {
             <TextInput
               placeholder="Digite seu email"
               placeholderTextColor="#9a9a9a"
+              value={email}
+              onChangeText={setEmail}
               keyboardType="email-address"
               style={styles.input}
             />
@@ -73,6 +104,8 @@ export default function CadastroEtapa2() {
               placeholder="Digite sua senha"
               placeholderTextColor="#9a9a9a"
               secureTextEntry
+              value={senha}
+              onChangeText={setSenha}
               style={styles.input}
             />
           </View>
@@ -84,12 +117,14 @@ export default function CadastroEtapa2() {
               placeholder="Confirme sua senha"
               placeholderTextColor="#9a9a9a"
               secureTextEntry
+              value={confirmarSenha}
+              onChangeText={setConfirmarSenha}
               style={styles.input}
             />
           </View>
         </View>
 
-        <TouchableOpacity style={styles.botao}>
+        <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
           <Text style={styles.textoBotao}>ENTRAR</Text>
         </TouchableOpacity>
 
