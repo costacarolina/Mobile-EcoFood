@@ -44,13 +44,6 @@ export default function Status() {
       />
 
       <View style={styles.cabecalho}>
-        <View style={styles.linhaLogo}>
-          <Image
-            source={require("../../../assets/images/logoecofood/logoecofood.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
 
         <View style={styles.linhaTitulo}>
           <TouchableOpacity
@@ -168,30 +161,18 @@ const styles = StyleSheet.create({
   },
 
   cabecalho: {
-    backgroundColor: "#FFFFFF",
-    borderTopWidth: 1,
-    borderTopColor: "#DDDDDD",
-  },
+  backgroundColor: "#FFFFFF",
+  borderTopWidth: 1,
+  borderTopColor: "#DDDDDD",
+  paddingTop: 55,
+},
 
-  linhaLogo: {
-    height: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 60,
-  },
-
-  logo: {
-    width: 130,
-    height: 60,
-    resizeMode: "contain",
-  },
-
-  linhaTitulo: {
-    height: 55,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+linhaTitulo: {
+  height: 55,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+},
 
   botaoVoltar: {
     width: 55,
@@ -201,7 +182,7 @@ const styles = StyleSheet.create({
   },
 
   tituloCabecalho: {
-    fontSize: 19,
+    fontSize: 22,
     fontWeight: "700",
     color: "#111111",
   },

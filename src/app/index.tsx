@@ -1,6 +1,9 @@
+import { Login } from "@/api/post-login";
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -11,6 +14,20 @@ import {
 } from "react-native";
 
 export default function Index() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const handleLogin = async () => { 
+      Login(email, senha)
+        .then((response) => {
+          console.log("Login bem-sucedido:", response);
+          router.replace("/(tabs)");
+        })
+        .catch((error) => {
+          alert("Falha no login. Verifique suas credenciais.");
+        });
+    }
+
   return (
     <LinearGradient
       colors={[
@@ -61,6 +78,8 @@ export default function Index() {
               placeholder="Digite seu email"
               placeholderTextColor="#9e9e9e"
               style={styles.input}
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
 
@@ -81,6 +100,8 @@ export default function Index() {
               placeholderTextColor="#9e9e9e"
               secureTextEntry
               style={styles.input}
+              value={senha}
+              onChangeText={setSenha}
             />
           </View>
 
@@ -92,7 +113,7 @@ export default function Index() {
 
           <TouchableOpacity
             style={styles.botao}
-            onPress={() => router.replace("/(tabs)")}
+            onPress={handleLogin}
           >
             <Text style={styles.textoBotao}>
               ENTRAR

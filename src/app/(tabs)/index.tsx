@@ -50,23 +50,17 @@ export default function Home() {
                 { backgroundColor: colors.background },
             ]}
         >
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scroll}
             >
-
-                {/* HEADER */}
-
                 <View style={styles.header}>
-
                     <Image
                         source={require("../../../assets/images/logoecofood/logoecofood.png")}
                         style={styles.logo}
                     />
 
                     <View style={styles.icons}>
-
                         <Ionicons
                             name="notifications-outline"
                             size={28}
@@ -82,13 +76,8 @@ export default function Home() {
                                 color={colors.text}
                             />
                         </TouchableOpacity>
-
                     </View>
-
                 </View>
-
-
-                {/* TÍTULO */}
 
                 <Text
                     style={[
@@ -116,9 +105,6 @@ export default function Home() {
                 >
                     Atualizado hoje, 08:30
                 </Text>
-
-
-                {/* CARDS DE INFORMAÇÃO */}
 
                 <FlatList
                     data={[
@@ -167,9 +153,6 @@ export default function Home() {
                     )}
                 />
 
-
-                {/* ALERTA */}
-
                 <View
                     style={[
                         styles.alerta,
@@ -179,7 +162,6 @@ export default function Home() {
                         },
                     ]}
                 >
-
                     <Ionicons
                         name="warning"
                         size={28}
@@ -187,7 +169,6 @@ export default function Home() {
                     />
 
                     <View style={styles.alertInfo}>
-
                         <Text
                             style={[
                                 styles.alertTitulo,
@@ -205,16 +186,15 @@ export default function Home() {
                         >
                             18 produtos próximos do vencimento.
                         </Text>
-
                     </View>
 
                     <TouchableOpacity
+                        onPress={() => router.push("/(tabs)/estoque")}
                         style={[
                             styles.alertButton,
                             { backgroundColor: colors.red },
                         ]}
                     >
-
                         <Text style={styles.alertButtonText}>
                             Ver estoque
                         </Text>
@@ -224,9 +204,7 @@ export default function Home() {
                             size={15}
                             color="#FFFFFF"
                         />
-
                     </TouchableOpacity>
-
                 </View>
 
                 <View
@@ -235,7 +213,6 @@ export default function Home() {
                         { backgroundColor: colors.card },
                     ]}
                 >
-
                     <Text
                         style={[
                             styles.impactoTitulo,
@@ -246,7 +223,6 @@ export default function Home() {
                     </Text>
 
                     <View style={styles.row}>
-
                         <ImpactoItem
                             icon="leaf-outline"
                             valor="12,4 kg"
@@ -264,10 +240,10 @@ export default function Home() {
                             valor="14%"
                             texto="Redução"
                         />
-
                     </View>
 
                     <TouchableOpacity
+                        onPress={() => router.push("/(tabs)/meusImpactos")}
                         style={[
                             styles.relatorio,
                             {
@@ -277,7 +253,6 @@ export default function Home() {
                             },
                         ]}
                     >
-
                         <Text
                             style={[
                                 styles.relatorioTexto,
@@ -292,13 +267,8 @@ export default function Home() {
                             size={15}
                             color={colors.text}
                         />
-
                     </TouchableOpacity>
-
                 </View>
-
-
-                {/* ESTOQUE */}
 
                 <View
                     style={[
@@ -306,7 +276,6 @@ export default function Home() {
                         { backgroundColor: colors.card },
                     ]}
                 >
-
                     <Text
                         style={[
                             styles.cardTitulo,
@@ -335,6 +304,7 @@ export default function Home() {
                     />
 
                     <TouchableOpacity
+                        onPress={() => router.push("/(tabs)/estoque")}
                         style={[
                             styles.verde,
                             {
@@ -344,7 +314,6 @@ export default function Home() {
                             },
                         ]}
                     >
-
                         <Text
                             style={[
                                 styles.verTexto,
@@ -363,13 +332,8 @@ export default function Home() {
                             size={16}
                             color={darkMode ? "#FFFFFF" : "#171717"}
                         />
-
                     </TouchableOpacity>
-
                 </View>
-
-
-                {/* LISTA DE COMPRAS */}
 
                 <View
                     style={[
@@ -377,7 +341,6 @@ export default function Home() {
                         { backgroundColor: colors.card },
                     ]}
                 >
-
                     <Text
                         style={[
                             styles.cardTitulo,
@@ -409,6 +372,7 @@ export default function Home() {
                     />
 
                     <TouchableOpacity
+                        onPress={() => router.push("/(tabs)/listaDeCompras")}
                         style={[
                             styles.amarelo,
                             {
@@ -418,7 +382,6 @@ export default function Home() {
                             },
                         ]}
                     >
-
                         <Text
                             style={[
                                 styles.verTexto,
@@ -433,33 +396,12 @@ export default function Home() {
                             size={16}
                             color={colors.text}
                         />
-
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={() => router.push("/(tabs)/detalhesProduto")}
-                        style={{
-                            backgroundColor: "#2F6B4F",
-                            padding: 15,
-                            borderRadius: 10,
-                            margin: 20,
-                        }}
-                    >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                            Visualizar detalhes do produto
-                        </Text>
-                    </TouchableOpacity>
-
                 </View>
-
             </ScrollView>
-
         </View>
     );
 }
-
-
-/* ITEM DA LISTA DE COMPRAS */
 
 function ListaItem({
     icon,
@@ -469,9 +411,7 @@ function ListaItem({
 }: any) {
     return (
         <View style={styles.itemLista}>
-
             <View style={styles.itemEsquerdo}>
-
                 <Ionicons
                     name={icon}
                     size={15}
@@ -486,7 +426,6 @@ function ListaItem({
                 >
                     {texto}
                 </Text>
-
             </View>
 
             <Ionicons
@@ -494,14 +433,11 @@ function ListaItem({
                 size={16}
                 color={textColor}
             />
-
         </View>
     );
 }
 
-
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
     },
@@ -563,9 +499,6 @@ const styles = StyleSheet.create({
         gap: 8,
     },
 
-
-    /* CARD DE ALERTA */
-
     alerta: {
         borderWidth: 1,
         borderRadius: 12,
@@ -575,8 +508,6 @@ const styles = StyleSheet.create({
         gap: 12,
         marginTop: 18,
         minHeight: 86,
-
-        // SOMBRA
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -622,15 +553,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-
-    /* CARDS MAIORES */
-
     card: {
         borderRadius: 10,
         padding: 12,
         marginTop: 15,
-
-        // SOMBRA
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -695,15 +621,10 @@ const styles = StyleSheet.create({
         includeFontPadding: true,
     },
 
-
-    /* IMPACTO */
-
     impacto: {
         borderRadius: 10,
         padding: 12,
         marginTop: 15,
-
-        // SOMBRA
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -737,7 +658,6 @@ const styles = StyleSheet.create({
 
     relatorioTexto: {
         fontSize: 13,
-        fontWeight: "600"
+        fontWeight: "600",
     },
-
 });

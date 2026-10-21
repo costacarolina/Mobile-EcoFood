@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useTheme } from "../../../context/themeContext";
 
 type Categoria = "Geladeira" | "Freezer" | "Despensa";
 
@@ -24,6 +25,8 @@ type Produto = {
 };
 
 export default function Estoque() {
+  const { darkMode } = useTheme();
+
   const [categoriaSelecionada, setCategoriaSelecionada] =
     useState<Categoria>("Geladeira");
 
@@ -69,47 +72,63 @@ export default function Estoque() {
       produto.nome.toLowerCase().includes(busca.toLowerCase())
   );
 
+  function abrirDetalhes(produto: Produto) {
+    router.push({
+      pathname: "/(tabs)/detalhesProduto",
+      params: {
+        id: String(produto.id),
+        nome: produto.nome,
+        validade: produto.validade,
+        quantidade: produto.quantidade,
+        dias: produto.dias,
+        emoji: produto.emoji,
+      },
+    });
+  }
+
   return (
     <LinearGradient
-      colors={[
-        "#FFFFFF",
-        "#FFFFFF",
-        "#FFFFFF",
-        "#F9F8F3",
-        "#F4F5EC",
-      ]}
+      colors={
+        darkMode
+          ? ["#121212", "#121212", "#181818", "#202020", "#202020"]
+          : ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#F9F8F3", "#F4F5EC"]
+      }
       locations={[0, 0.35, 0.65, 0.85, 1]}
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
-        {/* CABEÇALHO */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{ transform: [{ translateY: 35 }] }}
+          >
             <Ionicons
               name="arrow-back"
               size={30}
-              color="#193F30"
+              color={darkMode ? "#FFFFFF" : "#193F30"}
             />
           </TouchableOpacity>
 
-          <Image
-            source={require("@/assets/images/logoecofood/logoecofood.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={{ transform: [{ translateY: 35 }] }}
+          >
             <Ionicons
               name="ellipsis-vertical"
               size={25}
-              color="#193F30"
+              color={darkMode ? "#FFFFFF" : "#193F30"}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.titulo}>Estoque</Text>
+        <Text
+          style={[
+            styles.titulo,
+            { color: darkMode ? "#FFFFFF" : "#000000" },
+          ]}
+        >
+          Estoque
+        </Text>
 
-        {/* CATEGORIAS */}
         <View style={styles.categorias}>
           {(["Geladeira", "Freezer", "Despensa"] as const).map(
             (categoria) => {
@@ -120,6 +139,10 @@ export default function Estoque() {
                   key={categoria}
                   style={[
                     styles.categoria,
+                    {
+                      backgroundColor: darkMode ? "#252525" : "#FFFFFF",
+                      borderColor: darkMode ? "#444444" : "#DADADA",
+                    },
                     ativa && styles.categoriaAtiva,
                   ]}
                   onPress={() => {
@@ -130,6 +153,9 @@ export default function Estoque() {
                   <Text
                     style={[
                       styles.textoCategoria,
+                      {
+                        color: darkMode ? "#E0E0E0" : "#666666",
+                      },
                       ativa && styles.textoCategoriaAtiva,
                     ]}
                   >
@@ -141,19 +167,29 @@ export default function Estoque() {
           )}
         </View>
 
-        {/* BUSCA */}
         <View style={styles.buscaContainer}>
-          <View style={styles.busca}>
+          <View
+            style={[
+              styles.busca,
+              {
+                backgroundColor: darkMode ? "#252525" : "#FFFFFF",
+                borderColor: darkMode ? "#444444" : "#E9E9E9",
+              },
+            ]}
+          >
             <Ionicons
               name="search-outline"
               size={23}
-              color="#888888"
+              color={darkMode ? "#BBBBBB" : "#888888"}
             />
 
             <TextInput
               placeholder="Buscar produto"
-              placeholderTextColor="#888888"
-              style={styles.inputBusca}
+              placeholderTextColor={darkMode ? "#AAAAAA" : "#888888"}
+              style={[
+                styles.inputBusca,
+                { color: darkMode ? "#FFFFFF" : "#444444" },
+              ]}
               value={busca}
               onChangeText={setBusca}
             />
@@ -163,7 +199,7 @@ export default function Estoque() {
                 <Ionicons
                   name="close-circle"
                   size={20}
-                  color="#888888"
+                  color={darkMode ? "#BBBBBB" : "#888888"}
                 />
               </TouchableOpacity>
             )}
@@ -173,22 +209,27 @@ export default function Estoque() {
             <Ionicons
               name="filter-outline"
               size={25}
-              color="#777777"
+              color={darkMode ? "#CCCCCC" : "#777777"}
             />
           </TouchableOpacity>
         </View>
 
-        {/* LISTA DE PRODUTOS */}
         <ScrollView
           style={styles.lista}
           contentContainerStyle={styles.listaConteudo}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* ALERTA DE VENCIMENTO DA GELADEIRA */}
           {categoriaSelecionada === "Geladeira" &&
             produtosFiltrados.length > 0 && (
-              <View style={styles.alerta}>
+              <View
+                style={[
+                  styles.alerta,
+                  {
+                    backgroundColor: darkMode ? "#30251F" : "#FAF7F1",
+                  },
+                ]}
+              >
                 <View style={styles.alertaTitulo}>
                   <Ionicons
                     name="alert-circle"
@@ -202,9 +243,17 @@ export default function Estoque() {
                 </View>
 
                 {produtosFiltrados.map((produto) => (
-                  <View
+                  <TouchableOpacity
                     key={produto.id}
-                    style={styles.cardProduto}
+                    style={[
+                      styles.cardProduto,
+                      {
+                        backgroundColor: darkMode ? "#252525" : "#FFFFFF",
+                        borderColor: darkMode ? "#444444" : "#F0EDE8",
+                      },
+                    ]}
+                    onPress={() => abrirDetalhes(produto)}
+                    activeOpacity={0.8}
                   >
                     <View style={styles.imagemProduto}>
                       <Text style={styles.emojiProduto}>
@@ -213,15 +262,30 @@ export default function Estoque() {
                     </View>
 
                     <View style={styles.dadosProduto}>
-                      <Text style={styles.nomeProduto}>
+                      <Text
+                        style={[
+                          styles.nomeProduto,
+                          { color: darkMode ? "#FFFFFF" : "#505050" },
+                        ]}
+                      >
                         {produto.nome}
                       </Text>
 
-                      <Text style={styles.validade}>
+                      <Text
+                        style={[
+                          styles.validade,
+                          { color: darkMode ? "#DDDDDD" : "#454545" },
+                        ]}
+                      >
                         {produto.validade}
                       </Text>
 
-                      <Text style={styles.estoque}>
+                      <Text
+                        style={[
+                          styles.estoque,
+                          { color: darkMode ? "#BBBBBB" : "#707070" },
+                        ]}
+                      >
                         {produto.quantidade}
                       </Text>
                     </View>
@@ -229,25 +293,34 @@ export default function Estoque() {
                     <Text style={styles.dias}>
                       {produto.dias}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             )}
 
-          {/* TÍTULO DA CATEGORIA */}
-          <Text style={styles.tituloCategoria}>
+          <Text
+            style={[
+              styles.tituloCategoria,
+              { color: darkMode ? "#C1E3CC" : "#214D35" },
+            ]}
+          >
             {categoriaSelecionada}
           </Text>
 
-          {/* PRODUTOS */}
           {produtosFiltrados.length > 0 ? (
             produtosFiltrados.map((produto) => (
-              <View
+              <TouchableOpacity
                 key={produto.id}
                 style={[
                   styles.cardProduto,
                   styles.cardLista,
+                  {
+                    backgroundColor: darkMode ? "#252525" : "#FFFFFF",
+                    borderColor: darkMode ? "#444444" : "#F0EDE8",
+                  },
                 ]}
+                onPress={() => abrirDetalhes(produto)}
+                activeOpacity={0.8}
               >
                 <View style={styles.imagemProduto}>
                   <Text style={styles.emojiProduto}>
@@ -256,37 +329,55 @@ export default function Estoque() {
                 </View>
 
                 <View style={styles.dadosProduto}>
-                  <Text style={styles.nomeProduto}>
+                  <Text
+                    style={[
+                      styles.nomeProduto,
+                      { color: darkMode ? "#FFFFFF" : "#505050" },
+                    ]}
+                  >
                     {produto.nome}
                   </Text>
 
-                  <Text style={styles.validade}>
+                  <Text
+                    style={[
+                      styles.validade,
+                      { color: darkMode ? "#DDDDDD" : "#454545" },
+                    ]}
+                  >
                     {produto.validade}
                   </Text>
 
-                  <Text style={styles.estoque}>
+                  <Text
+                    style={[
+                      styles.estoque,
+                      { color: darkMode ? "#BBBBBB" : "#707070" },
+                    ]}
+                  >
                     {produto.quantidade}
                   </Text>
                 </View>
 
-                <TouchableOpacity>
-                  <Ionicons
-                    name="ellipsis-vertical"
-                    size={20}
-                    color="#777777"
-                  />
-                </TouchableOpacity>
-              </View>
+                <Ionicons
+                  name="ellipsis-vertical"
+                  size={20}
+                  color={darkMode ? "#BBBBBB" : "#777777"}
+                />
+              </TouchableOpacity>
             ))
           ) : (
             <View style={styles.vazio}>
               <Ionicons
                 name="search-outline"
                 size={35}
-                color="#A0A0A0"
+                color={darkMode ? "#BBBBBB" : "#A0A0A0"}
               />
 
-              <Text style={styles.textoVazio}>
+              <Text
+                style={[
+                  styles.textoVazio,
+                  { color: darkMode ? "#BBBBBB" : "#858585" },
+                ]}
+              >
                 Nenhum produto encontrado.
               </Text>
             </View>
@@ -319,8 +410,8 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 25,
     fontWeight: "700",
-    color: "#193F30",
     textAlign: "center",
+    marginTop: -10,
     marginBottom: 17,
   },
 
@@ -338,10 +429,8 @@ const styles = StyleSheet.create({
   categoria: {
     flex: 1,
     height: 42,
-    backgroundColor: "#FFFFFF",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#DADADA",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -353,7 +442,6 @@ const styles = StyleSheet.create({
   },
 
   textoCategoria: {
-    color: "#666666",
     fontSize: 15,
   },
 
@@ -370,9 +458,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 43,
     borderWidth: 1,
-    borderColor: "#E9E9E9",
     borderRadius: 11,
-    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 11,
@@ -382,7 +468,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     marginLeft: 8,
-    color: "#444444",
   },
 
   lista: {
@@ -394,7 +479,6 @@ const styles = StyleSheet.create({
   },
 
   alerta: {
-    backgroundColor: "#FAF7F1",
     marginHorizontal: 21,
     borderRadius: 20,
     padding: 10,
@@ -418,17 +502,14 @@ const styles = StyleSheet.create({
   tituloCategoria: {
     fontSize: 17,
     fontWeight: "700",
-    color: "#214D35",
     marginHorizontal: 22,
     marginBottom: 10,
   },
 
   cardProduto: {
     minHeight: 72,
-    backgroundColor: "#FFFFFF",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#F0EDE8",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 7,
@@ -458,19 +539,16 @@ const styles = StyleSheet.create({
   nomeProduto: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#505050",
   },
 
   validade: {
     fontSize: 12,
-    color: "#454545",
     marginTop: 2,
   },
 
   estoque: {
     fontSize: 12,
     fontWeight: "500",
-    color: "#707070",
     marginTop: 5,
   },
 
@@ -489,7 +567,6 @@ const styles = StyleSheet.create({
 
   textoVazio: {
     fontSize: 14,
-    color: "#858585",
     marginTop: 10,
   },
 

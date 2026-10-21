@@ -8,8 +8,23 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useTheme } from "@/../context/themeContext";
 
 export default function MeuImpacto() {
+  const { darkMode } = useTheme();
+
+  const cores = {
+    fundo: darkMode ? "#121A15" : "#FFFFFF",
+    fundoFinal: darkMode ? "#1B2920" : "#F4F5EC",
+    card: darkMode ? "#243329" : "#f1f1f1",
+    texto: darkMode ? "#F2F5F0" : "#111111",
+    textoSecundario: darkMode ? "#D0D9D1" : "#222222",
+    titulo: darkMode ? "#A7D5AE" : "#000000",
+    verde: darkMode ? "#80D68A" : "#29952E",
+    amarelo: darkMode ? "#F0D95A" : "#E6C600",
+    barra: darkMode ? "#80B88A" : "#416F49",
+  };
+
   const semanas = [
     { nome: "Sem 1", valor: 12 },
     { nome: "Sem 2", valor: 18 },
@@ -20,33 +35,33 @@ export default function MeuImpacto() {
 
   return (
     <LinearGradient
-      colors={["#FFFFFF", "#FFFFFF", "#F4F5EC"]}
+      colors={[cores.fundo, cores.fundo, cores.fundoFinal]}
       style={styles.container}
     >
-      {/* CABEÇALHO */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={30} color="#193F30" />
+          <Ionicons name="arrow-back" size={30} color={cores.titulo} />
         </TouchableOpacity>
 
-        <Text style={styles.titulo}>Meu impacto</Text>
+        <Text style={[styles.titulo, { color: cores.titulo }]}>
+          Meu Impacto
+        </Text>
 
         <Ionicons
           name="notifications-outline"
           size={27}
-          color="#111111"
+          color={cores.texto}
         />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* MENSAGEM */}
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.textoPequeno}>
+        <View style={[styles.card, { backgroundColor: cores.card }]}>
+          <View style={styles.textosCard}>
+            <Text style={[styles.textoPequeno, { color: cores.texto }]}>
               🌱 Com pequenas escolhas,
             </Text>
 
-            <Text style={styles.textoDestaque}>
+            <Text style={[styles.textoDestaque, { color: cores.texto }]}>
               geramos grandes{"\n"}mudanças.
             </Text>
           </View>
@@ -54,45 +69,62 @@ export default function MeuImpacto() {
           <Text style={styles.planta}>🪴</Text>
         </View>
 
-        {/* RESUMO */}
-        <Text style={styles.subtitulo}>Seu resumo de impacto</Text>
+        <Text style={[styles.subtitulo, { color: cores.texto }]}>
+          Seu resumo de impacto
+        </Text>
 
-        <View style={styles.resumo}>
+        <View style={[styles.resumo, { backgroundColor: cores.card }]}>
           <View style={styles.itemResumo}>
-            <Text style={styles.verde}>32 kg</Text>
-            <Text style={styles.descricao}>de alimentos{"\n"}salvos</Text>
+            <Text style={[styles.verde, { color: cores.verde }]}>
+              32 kg
+            </Text>
+            <Text style={[styles.descricao, { color: cores.textoSecundario }]}>
+              de alimentos{"\n"}salvos
+            </Text>
           </View>
 
           <View style={styles.itemResumo}>
-            <Text style={styles.amarelo}>14%</Text>
-            <Text style={styles.descricao}>de redução{"\n"}de resíduos</Text>
+            <Text style={[styles.amarelo, { color: cores.amarelo }]}>
+              14%
+            </Text>
+            <Text style={[styles.descricao, { color: cores.textoSecundario }]}>
+              de redução{"\n"}de resíduos
+            </Text>
           </View>
 
           <View style={styles.itemResumo}>
-            <Text style={styles.preto}>24</Text>
-            <Text style={styles.descricao}>escolhas{"\n"}conscientes</Text>
+            <Text style={[styles.preto, { color: cores.texto }]}>
+              24
+            </Text>
+            <Text style={[styles.descricao, { color: cores.textoSecundario }]}>
+              escolhas{"\n"}conscientes
+            </Text>
           </View>
         </View>
 
-        {/* GRÁFICO SIMPLES */}
-        <Text style={styles.subtitulo}>
+        <Text style={[styles.subtitulo, { color: cores.texto }]}>
           Evolução do seu impacto (kg)
         </Text>
 
-        <View style={styles.grafico}>
+        <View style={[styles.grafico, { backgroundColor: cores.card }]}>
           <View style={styles.barras}>
             {semanas.map((semana) => (
               <View key={semana.nome} style={styles.itemGrafico}>
-                <Text style={styles.valor}>{semana.valor}</Text>
+                <Text style={[styles.valor, { color: cores.texto }]}>
+                  {semana.valor}
+                </Text>
 
                 <View
                   style={[
                     styles.barra,
-                    { height: semana.valor * 2.5 },
+                    {
+                      height: semana.valor * 2.5,
+                      backgroundColor: cores.barra,
+                    },
                   ]}
                 />
 
-                <Text style={styles.nomeSemana}>
+                <Text style={[styles.nomeSemana, { color: cores.texto }]}>
                   {semana.nome}
                 </Text>
               </View>
@@ -101,22 +133,31 @@ export default function MeuImpacto() {
         </View>
 
         <View style={styles.legenda}>
-          <View style={styles.bolinha} />
-          <Text style={styles.descricao}>
+          <View style={[styles.bolinha, { backgroundColor: cores.barra }]} />
+          <Text style={[styles.descricao, { color: cores.textoSecundario }]}>
             Kg de alimentos salvos
           </Text>
         </View>
 
-        {/* INCENTIVO */}
-        <View style={styles.cardIncentivo}>
+        <View
+          style={[
+            styles.cardIncentivo,
+            { backgroundColor: cores.card },
+          ]}
+        >
           <Text style={styles.trofeu}>🏆</Text>
 
-          <View>
-            <Text style={styles.textoDestaque}>
+          <View style={styles.textosIncentivo}>
+            <Text style={[styles.textoDestaque, { color: cores.texto }]}>
               Continue assim!
             </Text>
 
-            <Text style={styles.descricaoIncentivo}>
+            <Text
+              style={[
+                styles.descricaoIncentivo,
+                { color: cores.textoSecundario },
+              ]}
+            >
               Você está fazendo a diferença.
             </Text>
           </View>
@@ -129,66 +170,67 @@ export default function MeuImpacto() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
-    paddingHorizontal: 8,
+    paddingTop: 55,
+    paddingHorizontal: 12,
   },
 
   header: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
-    marginBottom: 30,
+    gap: 18,
+    marginBottom: 32,
     paddingHorizontal: 5,
+    paddingTop: 12,
   },
 
   titulo: {
     flex: 1,
-    fontSize: 21,
+    fontSize: 24,
     fontWeight: "700",
-    color: "#193F30",
   },
 
   card: {
-    backgroundColor: "#FAFAFA",
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 16,
+    padding: 24,
+    minHeight: 145,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 28,
-    elevation: 2,
+    marginBottom: 32,
+    elevation: 3,
+  },
+
+  textosCard: {
+    flex: 1,
+    paddingRight: 8,
   },
 
   textoPequeno: {
-    fontSize: 11,
-    color: "#111111",
-    marginBottom: 8,
+    fontSize: 14,
+    marginBottom: 10,
   },
 
   textoDestaque: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "700",
-    color: "#111111",
   },
 
   planta: {
-    fontSize: 43,
+    fontSize: 60,
   },
 
   subtitulo: {
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: "700",
-    color: "#111111",
-    marginBottom: 12,
+    marginBottom: 15,
   },
 
   resumo: {
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
-    borderRadius: 12,
-    paddingVertical: 15,
-    marginBottom: 28,
-    elevation: 2,
+    borderRadius: 16,
+    paddingVertical: 20,
+    marginBottom: 32,
+    elevation: 3,
   },
 
   itemResumo: {
@@ -197,39 +239,34 @@ const styles = StyleSheet.create({
   },
 
   verde: {
-    color: "#29952E",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 19,
   },
 
   amarelo: {
-    color: "#E6C600",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 19,
   },
 
   preto: {
-    color: "#111111",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 19,
   },
 
   descricao: {
-    fontSize: 10,
-    color: "#222222",
+    fontSize: 12,
     textAlign: "center",
-    marginTop: 4,
+    marginTop: 5,
   },
 
   grafico: {
-    backgroundColor: "#FAFAFA",
-    borderRadius: 12,
-    padding: 15,
-    elevation: 2,
+    borderRadius: 16,
+    padding: 18,
+    elevation: 3,
   },
 
   barras: {
-    height: 145,
+    height: 155,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "flex-end",
@@ -241,56 +278,55 @@ const styles = StyleSheet.create({
   },
 
   valor: {
-    fontSize: 13,
-    color: "#111111",
-    marginBottom: 5,
+    fontSize: 15,
+    marginBottom: 6,
   },
 
   barra: {
-    width: 25,
-    backgroundColor: "#416F49",
-    borderRadius: 5,
+    width: 29,
+    borderRadius: 6,
   },
 
   nomeSemana: {
-    fontSize: 11,
-    color: "#111111",
-    marginTop: 7,
+    fontSize: 12,
+    marginTop: 8,
   },
 
   legenda: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 25,
+    marginVertical: 28,
   },
 
   bolinha: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#416F49",
-    marginRight: 6,
+    width: 11,
+    height: 11,
+    borderRadius: 6,
+    marginRight: 7,
   },
 
   cardIncentivo: {
-    backgroundColor: "#FAFAFA",
-    borderRadius: 12,
-    padding: 18,
+    borderRadius: 16,
+    padding: 22,
+    minHeight: 105,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 25,
-    elevation: 2,
+    marginBottom: 30,
+    elevation: 3,
   },
 
   trofeu: {
-    fontSize: 42,
+    fontSize: 50,
     marginRight: 22,
   },
 
+  textosIncentivo: {
+    flex: 1,
+  },
+
   descricaoIncentivo: {
-    fontSize: 12,
-    color: "#222222",
-    marginTop: 7,
+    fontSize: 14,
+    marginTop: 8,
   },
 });

@@ -3,7 +3,6 @@ import { Tabs } from "expo-router";
 import {
   StyleSheet,
   View,
-  Text,
   useWindowDimensions,
 } from "react-native";
 
@@ -13,15 +12,11 @@ export default function Home() {
   const alturaMenu = Math.max(82, 70 + fontScale * 12);
 
   return (
-
     <Tabs
       screenOptions={{
         headerShown: false,
-
-        // O menu fica SEMPRE claro
         tabBarActiveTintColor: "#173B2C",
         tabBarInactiveTintColor: "#173B2C",
-
         tabBarStyle: {
           height: alturaMenu,
           backgroundColor: "#FFFDF8",
@@ -30,29 +25,22 @@ export default function Home() {
           paddingBottom: 8,
           paddingTop: 7,
         },
-
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
           marginTop: 2,
         },
-
         tabBarIconStyle: {
           marginBottom: 1,
-        }
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Início",
-
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="home-outline"
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home-outline" size={26} color={color} />
           ),
         }}
       />
@@ -61,13 +49,8 @@ export default function Home() {
         name="estoque"
         options={{
           title: "Estoque",
-
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="cube-outline"
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="cube-outline" size={26} color={color} />
           ),
         }}
       />
@@ -76,14 +59,9 @@ export default function Home() {
         name="adicionarProduto"
         options={{
           title: "Adicionar",
-
           tabBarIcon: () => (
             <View style={styles.addButton}>
-              <Ionicons
-                name="add"
-                size={38}
-                color="#FFFFFF"
-              />
+              <Ionicons name="add" size={38} color="#FFFFFF" />
             </View>
           ),
         }}
@@ -93,13 +71,8 @@ export default function Home() {
         name="listaDeCompras"
         options={{
           title: "Compras",
-
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="cart-outline"
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="cart-outline" size={26} color={color} />
           ),
         }}
       />
@@ -108,13 +81,8 @@ export default function Home() {
         name="perfil"
         options={{
           title: "Perfil",
-
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="person-outline"
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={26} color={color} />
           ),
         }}
       />
@@ -128,15 +96,21 @@ export default function Home() {
       />
 
       <Tabs.Screen
-  name="status"
-  options={{
-    title: "Status",
-    href: null,
-  }}
-/>
-    </Tabs>
+        name="status"
+        options={{
+          title: "Status",
+          href: null,
+        }}
+      />
 
-    
+      <Tabs.Screen
+        name="meusImpactos"
+        options={{
+          title: "Meu impacto",
+          href: null,
+        }}
+      />
+    </Tabs>
   );
 }
 
@@ -145,12 +119,9 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     borderRadius: 40,
-
     backgroundColor: "#C59B45",
-
     justifyContent: "center",
     alignItems: "center",
-
     marginTop: -50,
     marginBottom: 5,
   },
