@@ -1,23 +1,22 @@
+import { useTheme } from "@/../context/themeContext";
 import InfoCard from "@/components/InfoCard";
 import CategoriaItem from "@/components/categoriaItem";
-import ImpactoItem from "@/components/impactoItem";
 import { getUsuario } from "@/lib/session";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@/../context/themeContext";
 
-import {
-    ScrollView,
-    View,
-    Text,
-    FlatList,
-    TouchableOpacity,
-    StyleSheet,
-    Image,
-} from "react-native";
+import { getQuantidadeNotificacoes } from "@/api/get-notificacoes";
+import { getTelaInicio } from "@/api/get-tela-inicio";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { getTelaInicio } from "@/api/get-tela-inicio";
-import { getQuantidadeNotificacoes } from "@/api/get-notificacoes";
+import {
+    FlatList,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 export default function Home() {
     const { darkMode } = useTheme();
@@ -55,12 +54,7 @@ export default function Home() {
         }, [])
     );
 
-    const totalEstoque =
-        (home?.estoque?.geladeira ?? 0) +
-        (home?.estoque?.freezer ?? 0) +
-        (home?.estoque?.despensa ?? 0);
-    const pct = (n: number) =>
-        `${totalEstoque > 0 ? Math.round((n / totalEstoque) * 100) : 0}%`;
+
     const kg = (n: number) => `${String(n ?? 0).replace(".", ",")} kg`;
 
     const colors = darkMode
@@ -86,6 +80,18 @@ export default function Home() {
             red: "#D9534F",
             gold: "#DFC687",
         };
+
+
+    console.log("home", home);
+
+
+    const total : any = Object.values(home?.estoque || {}).reduce((acc : any, valor) => acc + valor, 0);
+
+    const porcentagens : any = {};
+
+    for (const [item, quantidade] of Object.entries(home?.estoque || {})) {
+        porcentagens[item] = total > 0 ? (Number(quantidade) / total) * 100 : 0;
+    }
 
     return (
         <View
@@ -163,34 +169,28 @@ export default function Home() {
                     data={[
                         {
                             icon: "cube-outline",
-                            valor: "124",
+                            valor: home?.indicadores.totalProdutos ?? "0",
                             texto: "Produtos cadastrados",
                             cor: "#075B2A",
                         },
                         {
                             icon: "alert-circle-outline",
-                            valor: "18",
+                            valor: home?.indicadores.produtosVencendo ?? "0",
                             texto: "Próximos do vencimento",
                             cor: "#D9534F",
                         },
                         {
                             icon: "cart-outline",
-                            valor: "5",
+                            valor: home?.indicadores.produtosEsgotados ?? "0",
                             texto: "Produtos em falta",
                             cor: "#C9A34B",
                         },
                         {
                             icon: "leaf-outline",
-                            valor: "12,4 kg",
+                            valor: home?.indicadores.alimentosSalvos ?? "0",
                             texto: "Desperdício evitado este mês",
                             cor: "#287552",
-                        },
-                        {
-                            icon: "cash-outline",
-                            valor: "R$ 680",
-                            texto: "Economia gerada este mês",
-                            cor: "#075B2A",
-                        },
+                        },     
                     ]}
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -208,61 +208,61 @@ export default function Home() {
 
                 {home?.alerta && (
 
-                <View
-                    style={[
-                        styles.alerta,
-                        {
-                            borderColor: colors.red,
-                            backgroundColor: darkMode ? "#242424" : "#FFFFFF",
-                        },
-                    ]}
-                >
-                    <Ionicons
-                        name="warning"
-                        size={28}
-                        color={colors.red}
-                    />
-
-                    <View style={styles.alertInfo}>
-                        <Text
-                            style={[
-                                styles.alertTitulo,
-                                { color: "#E15B5B" },
-                            ]}
-                        >
-                            Atenção
-                        </Text>
-
-                        <Text
-                            style={[
-                                styles.alertTexto,
-                                { color: colors.text },
-                            ]}
-                        >
-                            {home?.alerta?.mensagem}
-                        </Text>
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={() => router.push("/(tabs)/estoque")}
+                    <View
                         style={[
-                            styles.alertButton,
-                            { backgroundColor: colors.red },
+                            styles.alerta,
+                            {
+                                borderColor: colors.red,
+                                backgroundColor: darkMode ? "#242424" : "#FFFFFF",
+                            },
                         ]}
                     >
-                        <Text style={styles.alertButtonText}>
-                            Ver estoque
-                        </Text>
-
                         <Ionicons
-                            name="chevron-forward"
-                            size={15}
-                            color="#FFFFFF"
+                            name="warning"
+                            size={28}
+                            color={colors.red}
                         />
-                    </TouchableOpacity>
-                </View>
-                )}
 
+                        <View style={styles.alertInfo}>
+                            <Text
+                                style={[
+                                    styles.alertTitulo,
+                                    { color: "#E15B5B" },
+                                ]}
+                            >
+                                Atenção
+                            </Text>
+
+                            <Text
+                                style={[
+                                    styles.alertTexto,
+                                    { color: colors.text },
+                                ]}
+                            >
+                                {home?.alerta?.mensagem}
+                            </Text>
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={() => router.push("/(tabs)/estoque")}
+                            style={[
+                                styles.alertButton,
+                                { backgroundColor: colors.red },
+                            ]}
+                        >
+                            <Text style={styles.alertButtonText}>
+                                Ver estoque
+                            </Text>
+
+                            <Ionicons
+                                name="chevron-forward"
+                                size={15}
+                                color="#FFFFFF"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                )}
+{/* 
                 <View
                     style={[
                         styles.impacto,
@@ -281,7 +281,7 @@ export default function Home() {
                     <View style={styles.row}>
                         <ImpactoItem
                             icon="leaf-outline"
-                            valor="12,4 kg"
+                            valor={kg(home?.impacto?.alimentosSalvos ?? 0)}
                             texto="Aproveitados"
                         />
 
@@ -324,7 +324,7 @@ export default function Home() {
                             color={colors.text}
                         />
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <View
                     style={[
@@ -343,19 +343,19 @@ export default function Home() {
 
                     <CategoriaItem
                         nome="Geladeira"
-                        porcentagem="45%"
+                        porcentagem={porcentagens.geladeira ? `${Math.round(porcentagens.geladeira)}%` : "0%"}
                         icon="snow-outline"
                     />
 
                     <CategoriaItem
                         nome="Freezer"
-                        porcentagem="30%"
+                        porcentagem={porcentagens.freezer ? `${Math.round(porcentagens.freezer)}%` : "0%"}
                         icon="cube-outline"
                     />
 
                     <CategoriaItem
                         nome="Despensa"
-                        porcentagem="25%"
+                        porcentagem={porcentagens.despensa ? `${Math.round(porcentagens.despensa)}%` : "0%"}
                         icon="file-tray-outline"
                     />
 
@@ -408,7 +408,7 @@ export default function Home() {
 
                     <ListaItem
                         icon="leaf-outline"
-                        texto="5 itens para repor"
+                        texto={`${home?.itensParaRepor || 0} itens para repor`}
                         color={colors.green}
                         textColor={colors.text}
                     />
