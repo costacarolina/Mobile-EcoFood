@@ -122,7 +122,10 @@ export default function Index() {
             />
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push("/esqueciSenha")}
+
+          >
             <Text style={styles.esqueciSenha}>
               Esqueci minha senha
             </Text>
