@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -35,6 +35,17 @@ export default function AdicionarProduto() {
   const [modalCategoria, setModalCategoria] = useState(false);
   const [modalLocal, setModalLocal] = useState(false);
 
+  const { codigoBarras: codigoBarrasRecebido } =
+    useLocalSearchParams<{ codigoBarras?: string }>();
+
+  const [codigoBarras, setCodigoBarras] = useState("");
+
+  useEffect(() => {
+    if (codigoBarrasRecebido) {
+      setCodigoBarras(codigoBarrasRecebido);
+    }
+  }, [codigoBarrasRecebido]);
+
   const colors = darkMode
     ? {
       background: "#181818",
@@ -65,6 +76,8 @@ export default function AdicionarProduto() {
     setUnidade("kg");
     setValidade("");
     setFornecedor("");
+    setCodigoBarras("");
+    router.setParams({ codigoBarras: "" });
   }
 
   function formatarData(dataPtBR: string) {
@@ -100,19 +113,20 @@ export default function AdicionarProduto() {
 
       let dataValidadeISO: string | undefined = undefined;
       if (validade && validade.length === 10) {
-        const partes = validade.split('/'); 
+        const partes = validade.split('/');
         dataValidadeISO = new Date(`${partes[2]}-${partes[1]}-${partes[0]}T00:00:00.000Z`).toISOString();
       }
 
-     
+
       const dados = {
         nome,
         categoria,
         localArmazenamento: local,
-        quantidade: qtdeFormatada, 
+        codigoBarras: codigoBarras || undefined,
+        quantidade: qtdeFormatada,
         unidade,
         restauranteId: getUsuario()?.id ?? 1,
-        dataValidade: dataValidadeISO 
+        dataValidade: dataValidadeISO
       };
 
       await criarProduto(dados);
@@ -305,6 +319,19 @@ export default function AdicionarProduto() {
                 Toque para escanear
               </Text>
             </TouchableOpacity>
+
+            {codigoBarras !== "" && (
+              <Text
+                style={{
+                  color: colors.green,
+                  marginTop: 12,
+                  fontSize: 14,
+                  fontWeight: "600",
+                }}
+              >
+                Código lido: {codigoBarras}
+              </Text>
+            )}
 
             <Text
               style={[
