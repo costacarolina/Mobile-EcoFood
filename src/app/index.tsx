@@ -1,7 +1,6 @@
 import { Login } from "@/api/post-login";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { setUsuario, setToken } from "@/lib/session";
