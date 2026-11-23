@@ -100,17 +100,24 @@ export default function Scanner() {
   }
 
   function handleBarcodeScanned({
-    data,
-  }: {
-    data: string;
-  }) {
-    if (scaneado) return;
+  data,
+}: {
+  data: string;
+}) {
+  if (scaneado) return;
 
-    setScaneado(true);
-    setCodigo(data);
+  setScaneado(true);
+  setCodigo(data);
 
-    console.log("Código de barras:", data);
-  }
+  console.log("Código de barras:", data);
+
+  router.dismissTo({
+    pathname: "/adicionarProduto",
+    params: {
+      codigoBarras: data,
+    },
+  });
+}
 
   function voltar() {
     router.back();
