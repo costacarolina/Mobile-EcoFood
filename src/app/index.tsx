@@ -146,6 +146,21 @@ export default function Index() {
 
       <View style={styles.bottomSection}>
 
+        {/* BOTÃO TEMPORÁRIO PARA TESTAR O SCANNER */}
+        <TouchableOpacity
+          style={styles.botaoTesteScanner}
+          onPress={() => router.push("/scanner")}
+        >
+          <Ionicons
+            name="barcode-outline"
+            size={22}
+            color="#2f7b42"
+          />
+          <Text style={styles.textoBotaoTesteScanner}>
+            TESTAR SCANNER
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.cardCadastro}>
 
           <Text style={styles.textoCadastro}>
@@ -280,6 +295,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  botaoTesteScanner: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1.5,
+    borderColor: "#2f7b42",
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 9,
+    marginBottom: 12,
+  },
+
+  textoBotaoTesteScanner: {
+    color: "#2f7b42",
+    fontSize: 14,
+    fontWeight: "700",
   },
 
   textoCadastro: {

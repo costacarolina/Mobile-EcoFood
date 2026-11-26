@@ -3,6 +3,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,8 +11,24 @@ import {
 } from "react-native";
 import { useTheme } from "@/../context/themeContext";
 
+type ProdutoOFF = {
+  product_name?: string;
+  product_name_pt?: string;
+  generic_name?: string;
+  generic_name_pt?: string;
+  categories?: string;
+  categories_tags?: string[];
+};
+
+type RespostaOFF = {
+  status?: string;
+  product?: ProdutoOFF;
+};
+
 export default function Scanner() {
   const { darkMode } = useTheme();
+
+  const [buscando, setBuscando] = useState(false);
 
   const [permission, requestPermission] = useCameraPermissions();
   const [scaneado, setScaneado] = useState(false);
