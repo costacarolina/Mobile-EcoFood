@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useTheme } from "../../../context/themeContext";
+import { useTheme } from "../../context/themeContext";
 
 export default function DetalhesProduto() {
   const { darkMode } = useTheme();
@@ -23,6 +23,8 @@ export default function DetalhesProduto() {
     localArmazenamento?: string; // <-- Adicionado para receber
     validade?: string;
     quantidade?: string;
+    quantidadeDisponivel?: string;
+    unidade?: string;
     dias?: string;
   }>();
 
@@ -317,8 +319,11 @@ export default function DetalhesProduto() {
       params: {
         id: params.id,
         nome: nomeProduto,
-        localArmazenamento: local,
-        dias: params.dias
+        categoria: categoriaParam,
+        localArmazenamento: localParam,
+        unidade: params.unidade || "un",
+        quantidadeDisponivel: params.quantidadeDisponivel || quantidadeProduto,
+        dias: params.dias,
       }
     })}
   >

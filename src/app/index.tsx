@@ -123,7 +123,7 @@ export default function Index() {
           </View>
 
           <TouchableOpacity
-            onPress={() => router.push("/esqueciSenha")}
+            onPress={() => router.push("/")}
 
           >
             <Text style={styles.esqueciSenha}>
@@ -146,20 +146,6 @@ export default function Index() {
 
       <View style={styles.bottomSection}>
 
-        {/* BOTÃO TEMPORÁRIO PARA TESTAR O SCANNER */}
-        <TouchableOpacity
-          style={styles.botaoTesteScanner}
-          onPress={() => router.push("/scanner")}
-        >
-          <Ionicons
-            name="barcode-outline"
-            size={22}
-            color="#2f7b42"
-          />
-          <Text style={styles.textoBotaoTesteScanner}>
-            TESTAR SCANNER
-          </Text>
-        </TouchableOpacity>
 
         <TouchableOpacity style={styles.cardCadastro}>
 

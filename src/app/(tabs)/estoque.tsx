@@ -95,13 +95,15 @@ export default function Estoque() {
 
   function abrirDetalhes(produto: Produto) {
     router.push({
-      pathname: "/(tabs)/detalhesProduto",
+      pathname: "/detalhesProduto",
       params: {
         id: String(produto.id),
         nome: produto.nome,
         categoria: produto.categoria,
         validade: new Date(produto.dataValidade).toLocaleDateString("pt-BR"),
         quantidade: `Estoque: ${produto.quantidade} ${produto.unidade}`,
+        quantidadeDisponivel: String(produto.quantidade),
+        unidade: produto.unidade,
         dias: `${produto.diasRestantes} dias`,
         emoji: getEmojiParaProduto(produto.nome, produto.localArmazenamento),
       },

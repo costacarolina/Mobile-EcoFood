@@ -88,37 +88,12 @@ export default function Home() {
       />
 
       <Tabs.Screen
-        name="detalhesProduto"
-        options={{
-          title: "Detalhes",
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="status"
-        options={{
-          title: "Status",
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="meusImpactos"
-        options={{
-          title: "Meu impacto",
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
         name="notificacoes"
         options={{
           title: "Notificações",
           href: null,
         }}
       />
-      
     </Tabs>
   );
 }

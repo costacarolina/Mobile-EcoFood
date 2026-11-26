@@ -10,20 +10,7 @@ import {
   View,
 } from "react-native";
 import { useTheme } from "@/../context/themeContext";
-
-type ProdutoOFF = {
-  product_name?: string;
-  product_name_pt?: string;
-  generic_name?: string;
-  generic_name_pt?: string;
-  categories?: string;
-  categories_tags?: string[];
-};
-
-type RespostaOFF = {
-  status?: string;
-  product?: ProdutoOFF;
-};
+import { identificarProdutoPorCodigo } from "../api/get-open-food-facts";
 
 export default function Scanner() {
   const { darkMode } = useTheme();
@@ -116,25 +103,67 @@ export default function Scanner() {
     );
   }
 
-  function handleBarcodeScanned({
-  data,
-}: {
-  data: string;
-}) {
-  if (scaneado) return;
+  async function handleBarcodeScanned({ data }: { data: string }) {
+    if (scaneado) return;
 
-  setScaneado(true);
-  setCodigo(data);
+    setScaneado(true);
+    setCodigo(data);
+    setBuscando(true);
 
-  console.log("Código de barras:", data);
+    try {
+      const produto = await identificarProdutoPorCodigo(data);
+      setBuscando(false);
 
-  router.dismissTo({
-    pathname: "/adicionarProduto",
-    params: {
-      codigoBarras: data,
-    },
-  });
-}
+      if (produto) {
+        // Cadastro pré-preenchido com o que foi identificado.
+        // Validade e local de armazenamento não vêm do código de barras,
+        // então o usuário confirma esses dois campos antes de salvar.
+        router.dismissTo({
+          pathname: "/(tabs)/adicionarProduto",
+          params: {
+            origem: "scanner",
+            codigoBarras: produto.codigoBarras,
+            nome: produto.nome,
+            categoria: produto.categoria,
+          },
+        });
+        return;
+      }
+
+      perguntarProximoPasso(
+        data,
+        "Não encontramos este produto na base de dados. Você pode cadastrá-lo manualmente."
+      );
+    } catch (erro) {
+      console.log("Erro ao identificar produto:", erro);
+      setBuscando(false);
+      perguntarProximoPasso(
+        data,
+        "Não foi possível consultar o produto agora. Verifique sua conexão."
+      );
+    }
+  }
+
+  function perguntarProximoPasso(codigoLido: string, mensagem: string) {
+    Alert.alert("Produto não identificado", mensagem, [
+      {
+        text: "Ler novamente",
+        style: "cancel",
+        onPress: () => {
+          setScaneado(false);
+          setCodigo("");
+        },
+      },
+      {
+        text: "Cadastrar manualmente",
+        onPress: () =>
+          router.dismissTo({
+            pathname: "/(tabs)/adicionarProduto",
+            params: { origem: "scanner", codigoBarras: codigoLido },
+          }),
+      },
+    ]);
+  }
 
   function voltar() {
     router.back();
@@ -227,6 +256,12 @@ export default function Scanner() {
         </Text>
 
        
+        {buscando && (
+          <Text style={[styles.instrucao, { color: "#FFFFFF" }]}>
+            Identificando produto...
+          </Text>
+        )}
+
         {codigo !== "" && (
           <View
             style={[
@@ -244,7 +279,7 @@ export default function Scanner() {
                 },
               ]}
             >
-              Código encontrado
+              Código lido
             </Text>
 
             <Text

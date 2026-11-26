@@ -18,6 +18,28 @@ import {
     View,
 } from "react-native";
 
+function ImpactoItem({
+    icon,
+    valor,
+    texto,
+    cor,
+}: {
+    icon: keyof typeof Ionicons.glyphMap;
+    valor: string;
+    texto: string;
+    cor: string;
+}) {
+    return (
+        <View style={{ flex: 1, alignItems: "center" }}>
+            <Ionicons name={icon} size={22} color={cor} />
+            <Text style={{ color: cor, fontWeight: "700", fontSize: 16, marginTop: 4 }}>
+                {valor}
+            </Text>
+            <Text style={{ color: cor, fontSize: 12 }}>{texto}</Text>
+        </View>
+    );
+}
+
 export default function Home() {
     const { darkMode } = useTheme();
 
@@ -85,9 +107,9 @@ export default function Home() {
     console.log("home", home);
 
 
-    const total : any = Object.values(home?.estoque || {}).reduce((acc : any, valor) => acc + valor, 0);
+    const total: any = Object.values(home?.estoque || {}).reduce((acc: any, valor) => acc + valor, 0);
 
-    const porcentagens : any = {};
+    const porcentagens: any = {};
 
     for (const [item, quantidade] of Object.entries(home?.estoque || {})) {
         porcentagens[item] = total > 0 ? (Number(quantidade) / total) * 100 : 0;
@@ -162,7 +184,7 @@ export default function Home() {
                         { color: colors.secondary },
                     ]}
                 >
-                    Atualizado hoje, 08:30
+                    {`Atualizado hoje, ${hora || "--:--"}`}
                 </Text>
 
                 <FlatList
@@ -187,10 +209,10 @@ export default function Home() {
                         },
                         {
                             icon: "leaf-outline",
-                            valor: home?.indicadores.alimentosSalvos ?? "0",
-                            texto: "Desperdício evitado este mês",
+                            valor: kg(home?.indicadores.alimentosSalvos ?? 0),
+                            texto: "Alimentos aproveitados",
                             cor: "#287552",
-                        },     
+                        },
                     ]}
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -262,7 +284,6 @@ export default function Home() {
                         </TouchableOpacity>
                     </View>
                 )}
-{/* 
                 <View
                     style={[
                         styles.impacto,
@@ -283,23 +304,19 @@ export default function Home() {
                             icon="leaf-outline"
                             valor={kg(home?.impacto?.alimentosSalvos ?? 0)}
                             texto="Aproveitados"
-                        />
-
-                        <ImpactoItem
-                            icon="cash-outline"
-                            valor="R$ 680"
-                            texto="Economia"
+                            cor={colors.text}
                         />
 
                         <ImpactoItem
                             icon="trending-up-outline"
-                            valor="14%"
-                            texto="Redução"
+                            valor={`${String(home?.impacto?.reducaoResiduos ?? 0).replace(".", ",")}%`}
+                            texto="Aproveitamento"
+                            cor={colors.text}
                         />
                     </View>
 
                     <TouchableOpacity
-                        onPress={() => router.push("/(tabs)/meusImpactos")}
+                        onPress={() => router.push("/meusImpactos")}
                         style={[
                             styles.relatorio,
                             {
@@ -324,7 +341,7 @@ export default function Home() {
                             color={colors.text}
                         />
                     </TouchableOpacity>
-                </View> */}
+                </View>
 
                 <View
                     style={[
@@ -408,7 +425,7 @@ export default function Home() {
 
                     <ListaItem
                         icon="leaf-outline"
-                        texto={`${home?.itensParaRepor || 0} itens para repor`}
+                        texto={`${home?.listaCompras?.itensParaComprar ?? 0} itens para repor`}
                         color={colors.green}
                         textColor={colors.text}
                     />

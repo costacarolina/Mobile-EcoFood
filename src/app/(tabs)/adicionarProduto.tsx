@@ -1,3 +1,4 @@
+
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -35,8 +36,15 @@ export default function AdicionarProduto() {
   const [modalCategoria, setModalCategoria] = useState(false);
   const [modalLocal, setModalLocal] = useState(false);
 
-  const { codigoBarras: codigoBarrasRecebido } =
-    useLocalSearchParams<{ codigoBarras?: string }>();
+  // Vem do scanner (já identificado) ou da navegação comum
+  const parametros = useLocalSearchParams<{
+    codigoBarras?: string;
+    nome?: string;
+    categoria?: string;
+    origem?: string;
+  }>();
+  const codigoBarrasRecebido = parametros.codigoBarras;
+  const vemDoScanner = parametros.origem === "scanner";
 
   const [codigoBarras, setCodigoBarras] = useState("");
 
@@ -44,7 +52,14 @@ export default function AdicionarProduto() {
     if (codigoBarrasRecebido) {
       setCodigoBarras(codigoBarrasRecebido);
     }
-  }, [codigoBarrasRecebido]);
+    if (vemDoScanner) {
+      // Produto identificado: abre direto no formulário, já preenchido
+      setModo("manual");
+      if (parametros.nome) setNome(parametros.nome);
+      if (parametros.categoria) setCategoria(parametros.categoria);
+      setUnidade("un");
+    }
+  }, [codigoBarrasRecebido, vemDoScanner, parametros.nome, parametros.categoria]);
 
   const colors = darkMode
     ? {
@@ -102,6 +117,25 @@ export default function AdicionarProduto() {
       return;
     }
 
+    // A validade é obrigatória: sem ela o sistema assumiria "hoje" e o produto apareceria como vencido
+    const partesValidade = validade.split("/");
+    const validadeValida =
+      validade.length === 10 &&
+      partesValidade.length === 3 &&
+      !isNaN(new Date(`${partesValidade[2]}-${partesValidade[1]}-${partesValidade[0]}T00:00:00.000Z`).getTime());
+
+    if (!validadeValida) {
+      Alert.alert("Atenção", "Informe a data de validade no formato DD/MM/AAAA.");
+      return;
+    }
+
+    // Nunca cadastrar no restaurante errado: exige sessão ativa
+    const restaurante = getUsuario();
+    if (!restaurante?.id) {
+      Alert.alert("Sessão expirada", "Faça login novamente para cadastrar produtos.");
+      return;
+    }
+
     try {
       setSalvando(true);
 
@@ -125,7 +159,7 @@ export default function AdicionarProduto() {
         codigoBarras: codigoBarras || undefined,
         quantidade: qtdeFormatada,
         unidade,
-        restauranteId: getUsuario()?.id ?? 1,
+        restauranteId: restaurante.id,
         dataValidade: dataValidadeISO
       };
 
@@ -139,7 +173,11 @@ export default function AdicionarProduto() {
             text: "OK",
             onPress: () => {
               limparFormulario();
-              router.back();
+              if (vemDoScanner) {
+                router.replace("/(tabs)/estoque");
+              } else {
+                router.back();
+              }
             }
           }
         ]
